@@ -107,7 +107,6 @@ asset
 besides
 other than
 in addition to
-detect 
 synopsis
 overview
 concise
