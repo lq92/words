@@ -15,5 +15,17 @@
 	"tedious": "单调的、乏味的",
 	"prefix": "前缀",
 	"vendor": "供应商",
-	"parentheses": "圆括号"
+	"parentheses": "圆括号",
+	"neat": "整洁的",
+	"unintended": "意想不到的、无意识的",
+	"hassle": "麻烦、困难",
+	"manipulate": "操控、操作",
+	"reference": "参考、引用",
+	"valid": "有效的",
+	"brackets": "括号",
+	"interpreted": "解释、把...理解为",
+	"be aware of": "知道、注意",
+	"explicit": "显式的、明确的",
+	"compound": "复合的",
+	"suffix": "后缀"	
 }
