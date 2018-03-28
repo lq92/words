@@ -1,12 +1,29 @@
+#################
 manually
 colon
 consistent
 visual
-overly
 prefix
 vendor
 hassle
 reference
 be aware of
-explicit
 underscore
+
+#################
+nifty
+hierarchy
+on the other hand
+with that in mind
+snippet
+portion
+tedious
+parentheses
+neat
+valid
+brackets
+compound
+suffix
+interpolation
+in general
+inspect
