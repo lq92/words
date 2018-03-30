@@ -70,3 +70,13 @@ orientation
 landscape
 portrait
 
+#################
+unintended
+arbitrary
+subtraction subtracting
+whereas
+alongside
+suppose
+maintenance
+conflict
+beneath
