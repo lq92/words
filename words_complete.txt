@@ -49,3 +49,24 @@ piecewise
 literal
 concatenate
 
+#################
+explicit
+overly
+interpreted
+plain
+interchangeably
+interactive
+experiment
+vice versa
+parallel
+indistinguishable
+encounter
+division
+modulo
+unary
+precedence
+cirumstance
+orientation
+landscape
+portrait
+
