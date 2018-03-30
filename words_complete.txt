@@ -31,7 +31,21 @@ inspect
 #################
 in turn
 layer
-precedence
 regardless
 negative
 tricky
+
+#################
+hyphen
+manipulate
+comma
+exception
+look up
+multiplication
+vast
+majority
+likewise
+piecewise
+literal
+concatenate
+
