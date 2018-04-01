@@ -1,12 +1,12 @@
 {
+	"unintended": "意想不到的",
 	"typical": "典型的、特有的、象征性的",
-	"restriction": "限制、约束",
+	"restriction": "限制、约束、限制条件",
 	"semantic": "语义的",
 	"burden": "负担",
 	"concern": "担忧",
 	"duplication": "重复",
 	"alternate": "交换",
-	"restriction": "限制、限制条件",
 	"variation": "变化",
 	"substantial": "实质性的",
 	"uncommon": "不常见的",
@@ -15,5 +15,8 @@
 	"capable": "有能力",
 	"rarely": "很少、难得",
 	"refactoring": "重构",
+	"resort": "求助",
+	"positional": "位置",
+	"leftover": "剩下的",
 	
 }
