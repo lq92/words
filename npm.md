@@ -15,4 +15,7 @@
 10. CLI添加注册账户: npm adduser
 11. CLI登录账户: npm login
 12. CLI是否登录: npm whoami
-13. https://npmjs.com/~yourname 
+13. 查看主页: https://npmjs.com/~yourname 
+14. 发布包: npm publish
+15. 更新包: npm version <update_type> + npm publish
+16. 更新README.md: npm version patch + npm publish 
