@@ -19,3 +19,16 @@
 14. 发布包: npm publish
 15. 更新包: npm version <update_type> + npm publish
 16. 更新README.md: npm version patch + npm publish 
+17. npm包的版本标准：
+		* 第一次发布版本号：1.0.0
+		* fix bugs and patch: 递增第三位
+		* 增加新特性/对之前版本没有破坏: 递增第二位
+		* 打破之前版本的兼容性: 递增第一位
+
+
+
+///////////////////////////
+### optional
+1. Add tags: npm dist-tag add <package>@<version> [<tag>]
+2. Publish with tags: npm publish --tag <tag>
+3. Install with tags: npm install package@<tag>	
