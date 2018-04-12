@@ -85,3 +85,95 @@
 		}
 	}
 	```
+8. html-webpack-plugin: 入口文件打包后更改名字，使用这个插件会自动更改，这个本质是重新生成html文件去替换项目文件[github](https://github.com/jantimon/html-webpack-plugin)
+	```
+	const HtmlWebpackPlugin = require('html-webpack-plugin')
+	module.exports = {
+		plugins: [
+			new HtmlWebpackPlugin({
+				title: ''
+			})
+		]
+	}
+	```
+9. clean-webpack-plugin: 清空文件目录[github](https://github.com/johnagan/clean-webpack-plugin)
+	```
+	const CleanWebpackPlugin = require('clean-webpack-plugin')
+	module.exports = {
+		plugins: [
+			new CleanWebpackPlugin(['dirname'])
+		]
+	}
+	```
+10. 开发环境错误跟踪工具: devtool / [docs](https://webpack.js.org/configuration/devtool/)
+	```
+	module.exports = {
+		devtool: 'inline-source-map'
+	}
+	```	
+11. 自动打包
+	1. watch模式: 缺点-需要手动刷新浏览器查看
+		* package.json中配置scripts
+		```
+		scripts: {
+			"watch": "webpack --watch"
+		}
+		```	
+	2. 本地开启服务器模式(无需手动刷新浏览器,默认打开8080端口): webpack-dev-server / [docs](https://webpack.js.org/configuration/dev-server/)
+		* 安装webpack-dev-server
+		```
+		npm install webpack-dev-server -D
+		```
+		* 配置webpack.config.js
+		```
+		module.exports = {
+			devServer: {
+				contentBase: './dist'
+			}
+		}
+		```
+		* 配置package.json中scripts
+		```
+		scripts: {
+			"start": "webpack-dev-server --open"
+		}
+		```	
+		* npm start
+	3. 使用中间件(会自动编译，但是不能自动刷新): webpack-dev-middleware(内部也还是调用webpack-dev-server,但是可以自定义设置) / [docs](https://webpack.js.org/guides/hot-module-replacement/)
+	使用express和webpack-dev-middleware	
+		* 安装express和webpack-dev-middleware
+		```
+		npm install express webpack-dev-middleware -D
+		```
+		* 配置webpack.config.js
+		```
+		module.exports = {
+			output: {
+				publicPath: '/'
+			}
+		}
+		```
+		* 配置package.json
+		```
+		"scripts": {
+			"server": "node server.js"
+		}
+		```
+		* 新建server.js开启本地服务器
+		```
+		const express = require('express')
+		const webpack = require('webpack')
+		const WebpackDevMiddleware = require('webpack-dev-middleware')
+
+		const app = express()
+		const config = require('./webpack.config.js')
+		const compiler = webpack(config)
+
+		app.use(WebpackDevMiddleware(compiler, {
+			publicPath: config.output.publicPath
+		}))
+
+		app.listen(port, () => {
+			console.log(`The server is running at ${port}`)
+		})
+		```
