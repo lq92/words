@@ -71,3 +71,17 @@
 	}
 	```	
 	* 引入文件到项目入口文件: import variable form 'dirname'
+7. 多入口文件分开打包
+	* 配置webpack.config.js
+	```
+	module.exports = {
+		entry: {
+			alias1: 'pathname1',
+			alias2: 'pathname2'
+		},
+		output: {
+			filename: '[name].js',
+			path: path.resolve('__dirname', 'dist')
+		}
+	}
+	```
