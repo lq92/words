@@ -1,4 +1,4 @@
-## Webpack
+## Webpack(https://webpack.js.org/guides)
 1. 安装: 
 	* 局部安装(recommend): npm install webpack + npm install webpack-cli(version 4 or greater) 
 	* 全局安装(not recommend/全局安装会锁定webpack版本，当在当前项目中使用不同版本的话，可能会导致错误): npm install webpack -g
@@ -119,16 +119,27 @@
 			"watch": "webpack --watch"
 		}
 		```	
+<<<<<<< HEAD
 	2. 本地开启服务器模式(无需手动刷新浏览器,默认打开8080端口): webpack-dev-server / [docs](https://webpack.js.org/configuration/dev-server/)
 		* 安装webpack-dev-server
 		```
 		npm install webpack-dev-server -D
+=======
+	2. 本地开启服务器模式(无需手动刷新浏览器): webpack-dev-server / [docs](https://webpack.js.org/configuration/dev-server/)
+		* 安装webpack-dev-server
+		```
+		npm install webpack-dev-server
+>>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 		```
 		* 配置webpack.config.js
 		```
 		module.exports = {
 			devServer: {
+<<<<<<< HEAD
 				contentBase: './dist'
+=======
+				contentBase: 'dirname'
+>>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 			}
 		}
 		```
@@ -139,7 +150,11 @@
 		}
 		```	
 		* npm start
+<<<<<<< HEAD
 	3. 使用中间件(会自动编译，但是不能自动刷新): webpack-dev-middleware(内部也还是调用webpack-dev-server,但是可以自定义设置) / [docs](https://webpack.js.org/guides/hot-module-replacement/)
+=======
+	3. 使用中间件(会自动编译，但是不能自动刷新): webpack-dev-middleware(内部也还是调用webpack-dev-server,但是可以自定义的设置) / [docs](https://webpack.js.org/guides/hot-module-replacement/)
+>>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 	使用express和webpack-dev-middleware	
 		* 安装express和webpack-dev-middleware
 		```
@@ -176,4 +191,10 @@
 		app.listen(port, () => {
 			console.log(`The server is running at ${port}`)
 		})
+<<<<<<< HEAD
 		```
+=======
+		```
+12.	Hot Module Replacement
+13. 	
+>>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
