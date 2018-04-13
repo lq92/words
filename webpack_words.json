@@ -15,9 +15,6 @@
 	"instruct": "指导、命令",
 	"downside": "缺点",
 	"desired": "想要的、渴望的",
-<<<<<<< HEAD
-		
-=======
 	"implementation": "实现",
 	"enable": "启用、使能够",
 	"realize": "意识到",
@@ -29,6 +26,13 @@
 	"remainder": "剩余部分",
 	"stem from": "源于",
 	"cube": "立方",
+	"sideeffect": "副作用",
+	"accomplish": "完成",
+	"expose": "暴露",
+	"cue": "暗示",
+	"mangled": "支离破碎",
+	"significant": "重要的",
+	"yield": "产生",
+	"duplicate": "重复的",
 			
->>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 }

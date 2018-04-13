@@ -129,17 +129,12 @@
 		* 安装webpack-dev-server
 		```
 		npm install webpack-dev-server
->>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 		```
 		* 配置webpack.config.js
 		```
 		module.exports = {
 			devServer: {
-<<<<<<< HEAD
 				contentBase: './dist'
-=======
-				contentBase: 'dirname'
->>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 			}
 		}
 		```
@@ -191,10 +186,26 @@
 		app.listen(port, () => {
 			console.log(`The server is running at ${port}`)
 		})
-<<<<<<< HEAD
 		```
-=======
-		```
-12.	Hot Module Replacement
-13. 	
->>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
+12.	***Hot Module Replacement***
+13. sideEffects: 将引入模块中未使用的代码不打包进最终文件(根据官方文档中配置在package.json中配置***未实现***)
+	```
+	{
+		"sideEffects": false
+	}
+	```	
+	```
+	{
+		"sideEffects": [
+			"relative/absolute"
+		]
+	}
+	```
+	* 可以在webpack.config.js中配置成生产模式已压缩打包文件大小
+	```
+	{
+		mode: 'production'
+	}
+	```
+14. 根据环境不同配置不同的webpack[详见](https://github.com/lq92/init-project.git)	
+
