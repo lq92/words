@@ -119,12 +119,11 @@
 			"watch": "webpack --watch"
 		}
 		```	
-<<<<<<< HEAD
 	2. 本地开启服务器模式(无需手动刷新浏览器,默认打开8080端口): webpack-dev-server / [docs](https://webpack.js.org/configuration/dev-server/)
 		* 安装webpack-dev-server
 		```
 		npm install webpack-dev-server -D
-=======
+		```
 	2. 本地开启服务器模式(无需手动刷新浏览器): webpack-dev-server / [docs](https://webpack.js.org/configuration/dev-server/)
 		* 安装webpack-dev-server
 		```
@@ -145,11 +144,8 @@
 		}
 		```	
 		* npm start
-<<<<<<< HEAD
 	3. 使用中间件(会自动编译，但是不能自动刷新): webpack-dev-middleware(内部也还是调用webpack-dev-server,但是可以自定义设置) / [docs](https://webpack.js.org/guides/hot-module-replacement/)
-=======
 	3. 使用中间件(会自动编译，但是不能自动刷新): webpack-dev-middleware(内部也还是调用webpack-dev-server,但是可以自定义的设置) / [docs](https://webpack.js.org/guides/hot-module-replacement/)
->>>>>>> 7c94a45a0b04ecb8fdbee032df52e1078c705476
 	使用express和webpack-dev-middleware	
 		* 安装express和webpack-dev-middleware
 		```
@@ -208,4 +204,28 @@
 	}
 	```
 14. 根据环境不同配置不同的webpack[详见](https://github.com/lq92/init-project.git)	
+	* 为了在生产环境中更好的debug建议在生产环境配置devtool
+		```
+		module.exports = {
+			devtool: 'source-map',
+			plugins: [
+				new UglifyJs({
+					sourceMap: true
+				})
+			]
+		}
+		```
+		***避免在生产环境中使用inline-xxx和eval-xxx，因为可以使打包后的文件更大，，影响整体的表现***
+15. 代码分割
+	* 使用多入口文件(缺点: 如果多入口文件同时引入了某个代码块，此代码块会重复打包)	
+	* CommonsChunkPlugin(不打包重复代码)[docs](https://webpack.js.org/plugins/commons-chunk-plugin/)	
+		```
+		const webpack = require('webpack')
+		module.exports = {
+			new webpack.optimize.CommonsChunkPlugin({
+				name: 'common'
+			})
+		}
+		```
+	* 动态引入[docs](https://webpack.js.org/guides/code-splitting/#dynamic-imports)	
 
