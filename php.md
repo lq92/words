@@ -149,5 +149,107 @@
 	* fmod(): 浮点数取模
 ####时间
 	1. 时区
+		设置时区: date_default_timezone_set('Asia/Shanghai')
+		获取时区: date_default_timezone_get()
 	2. 世界时(格林尼治地方时间)
 	3. unix时间戳(自1970年1月1日零时起到现在的毫秒数)	
+		time()获取时间戳
+		date('Y m d H i s')获取本地时间，可选参数时间戳
+		getdate()获取当前系统时间，返回一个数组
+			seconds--------秒
+			minutes--------分
+			hours----------时
+			mday-----------月份中第几天	
+			wday-----------数字周几(0-6)
+			mon------------数字月份
+			year-----------年份
+			yday-----------一年中的第几天
+			weekday--------英文周几
+			month----------英文月份
+			0--------------时间戳
+		checkdate(month, day, year): 检验输入的日期是否正确，返回boolean，参数为月日年	
+		mktime(hours, minutes, seconds, month, day, year): 生成时间，返回时间戳
+		strtotime(string): 返回日期的时间戳
+		microtime(true): 返回unix时间戳的微秒数
+####字符串方法
+	1. trim(string): 删除字符串前后空格
+		ltrim(string)
+		rtrim(string)/chop(string)
+	2. str_pad(string, str_num, [填充字符])
+	3. str_repeat(string, num): 重复字符串次数
+	4. str_split(string): 将字符串分隔成数组
+	5. strrev(string): 反转字符串
+	6. wordwrap(string, num): 将字符串按照指定num分隔换行
+	7. strlen(string): 统计字符串长度
+	***汉字在GBK编码中是双字节，在UTF-8中是三字节***	
+####数组
+	1. 数组定义(数组中可以定义任意类型的数据)
+		* 索引值(索引可以不用从0开始)
+			```
+				$arr = array(1, 1.2, false, 'str')
+				or
+				$arr = array(
+					0 => 1,
+					1 => 1.2,
+					2 => false,
+					3 => 'str'
+				)
+				or
+				$arr = array(
+					0 => 1,
+					4 => 1.2,
+					false,
+					1000 => 'str'
+				)
+			```	
+			1. 索引数组要是不指定下标，那下标是从0开始
+			2. 如果指定下标，那下标是指定的值
+			3. 若指定下标，后一个下标没有指定的话，那后一个下标在前一个的基础上加1
+		* 数组操作
+			1. 增加数组元素
+				$arr[] = xxx(此时的元素索引是最大数字索引加1)	
+			2. 修改元素
+				$arr[index] = xxx
+			3. 删除数组元素
+				unset($arr[index])	
+				删除了值，并不会让后面的下标向前移动，而是原来的值为多少就是多少
+				删除某个值，新加入的值不会替换掉原来的位置
+		* 数组字面量
+			```
+				$arr = [
+					1, 
+					20 => 1.2,
+					false,
+					30 => 'str'
+				]
+			```		
+		* 关联数组(带有指定键的数组)
+		```
+			$arr = [
+				'str' => 'strrr',
+				'str1' => 'str111'
+			]
+		```	
+		* 数组长度: count($arr)
+		* 数组遍历
+			1. 连续的索引数组遍历：循环遍历
+				```
+					$arr = array(1, 2, 3, 4, 5, 6, 7, 8);
+					for($i = 0; $i < count($arr); $i++){
+						echo $arr[$i] . '<br />';
+					}
+				```
+			2. 不连续的索引数组和关联数组遍历: foreach遍历
+				```
+					$arr = [
+						'str1' => 'str11',
+						'str2' => 'str22'
+					]
+					foreach($arr as $key => $val){
+						echo $key . '-----' . $val;
+					}
+				``` 
+
+
+
+
