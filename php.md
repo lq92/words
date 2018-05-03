@@ -245,11 +245,52 @@
 						'str1' => 'str11',
 						'str2' => 'str22'
 					]
-					foreach($arr as $key => $val){
+					foreach($arr as $key => $val){ // $key optional
 						echo $key . '-----' . $val;
 					}
-				``` 
-
+				```
+			3. list(variable1, variable2...)函数遍历: 遍历的是索引数组，且接收变量与数组是一一对应关系，第一个变量对应的是数组索引值为0的值
+				```
+					list($one, $two) = [
+						'hello',
+						'world'
+					]
+					echo $one . '<br />';  // hello
+					echo $two . '<br />';  // world
+				```	 
+			4. each($arr)循环: 接收一个数组作为参数，依次迭代该数组，先将数组的第一项返回，0/key为索引，1/value为值；直到最后无数组返回，则返回false 	
+				```
+					$arr = [
+						'China',
+						'USA'
+					];
+					$first = each($arr);
+					echo '<pre>';
+					var_dump($first);
+					echo '</pre>';
+					/* array(4){
+					*		[1] => 
+					*		string(5) China
+					*		[value] =>
+					*		string(5) China
+					*		[0] => 
+					*		int(0)
+					*		['key'] =>
+					*		int(0)
+					*	}
+					*/
+				```
+		* 数组常用操作函数
+			array_shift：弹出数组中第一个数
+			array_unshift：在数组头部压入元素
+			array_pop：弹出数组中最后一个数
+			array_push：在数组尾部压入元素
+			current：数组当前指针的值
+			key：数组当前指针的键
+			next：指针向下移
+			prev：指针向下移
+			reset：重置指针到开始处
+			end：指针到结束处		
 
 
 
