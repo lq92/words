@@ -347,8 +347,25 @@
 			x+：创建并以读写方式打开，将文件指针指向文件头，如果文件存在则调用fopen失败并返回false，并产生错误信息，如果文件不存在则尝试创建
 	4. fread('resource', size)：读取资源，传入一个资源，和读取长度，返回资源内容
 	5. fclose('resource')：关闭资源 	
-
-	http://www.php.cn/code/1170.html
+	6. file_put_contents('dirname', 'data')：写入数据，返回写入的数据长度
+	7. fwrite(resource, data)：写入数据，传入一个资源和数据，返回写入的数据长度
+	8. tmpfile()：创建临时文件，用完关闭即删。
+		```
+			$file = tmpfile();
+			fwrite($file, 'data');
+			fclose($file);
+		```
+	9. rename('old_filename', 'new_filename')：重命名文件名
+	10. copy('old_file', 'new_file')：拷贝文件
+	11. unlink('filename')：删除文件
+	12. 文件属性检测
+		* file_exists：文件是否存在
+		* is_file：是否是文件
+		* is_dir：是否是文件夹
+		* is_writeable：文件是否可写
+		* is_readable：文件是否可读
+		* is_executable：文件是否可执行	
+	
 
 
 
