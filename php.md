@@ -16,13 +16,13 @@
 ####isset函数
 	传入一组或一个变量，如果有一个是NULL，则返回false		
 ####gettype函数
-	根据传入的变量输出变量类型: integer/double/NULL/string/boolean/array
+	根据传入的变量输出变量类型: integer/double/NULL/string/boolean/array/object
 ####var_dump函数
 	根据传入的变量输出数据类型和值
-		字符串类型会输出长度(一个中文是3)
+		字符串类型会输出长度
 		数组会输出每一项的数据类型和值		
 ####判断数据类型
-	is_int/is_float/is_bool/is_string/is_array/is_object/is_null/is_resource/is_scalar(是否为标量)/is_numeric(是否为数值类型包含字符串数值)/is_callable(是否为函数)	
+	is_int/is_float/is_bool/is_string/is_array/is_object/is_null/is_resource/is_scalar(是否为标量integer/float/string/boolean)/is_numeric(是否为数值类型包含字符串数值)/is_callable(是否为函数)	
 ####布尔值的自动类型转换
 	1. NULL为假
 	2. 空字符串为假，有且仅有一个0的字符串为假，其余为真
@@ -34,6 +34,7 @@
 	2. 字符串前的整数或者浮点数在参与运算时会将开始处的数字参与运算
 ####强制类型转换
 	1. 运用三个转型函数：intval()/floatval()/strval()
+		* intval($variable, [base])：默认基数是10，空数组返回0，非空数组返回1
 	2. 在变量前加上()括号类型，不改变原变量
 	3. settype(变量, 类型)直接改变变量本身	
 ####常量
@@ -118,10 +119,38 @@
 	10. 可变函数：把一个函数名（可以加引号或者不加引号）赋值给一个变量，即把这个函数的引用赋值给这个变量，这样就可以用变量名()（加括号）执行函数体
 	11. 函数内部函数：即在一个函数内再声明一个函数，内部函数需外部调用后才定义，内部函数不能重复定义，外部函数也只能调用一次，否则会报错，内部函数不是外部函数的作用域内
 	12. 函数体内定义的变量只能在函数内使用，若想在函数体外使用则需要定义为超全局变量的项数($GLOBALS是一个数组)
+		```
+			function fn(){
+				$GLOBALS['a'] = 10;
+			}
+			fn();
+			echo $a; // 10
+		```
 	13. 在全局中定义的变量就相当于在$GLOBALS上定义项数
+		```
+			$str = 'hello'; 
+			echo $GLOBALS['str']; // 'hello'
+		```
 	14. 函数体内要调用或修改体外的变量需通过$GLOBALS['variableName']来调用
+		```
+			$a = 10;
+			function fn(){
+				$result = 10 + $GLOBALS['a'];
+				echo $result;
+			}
+			fn(); // 20
+		```
 	15. 可以通过在函数体内用$GLOBALS['variableName']来定义全局变量
 	16. 可以在函数体内通过global $variable_one $variable_two;来引用过全局的变量
+		```
+			$a = 10; 
+			$b = 20;
+			function fn(){
+				global $a, $b;
+				echo $a + $b;
+			}
+			fn(); // 30
+		```
 	17. 函数参数的变量引用：在形参变量前加上&表明形参和实参都是指向同一个地址的引用
 	18. 函数体内定义的变量要赋值
 ####静态变量
