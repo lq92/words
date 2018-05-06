@@ -65,7 +65,7 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 		```	
 	3. for...in循环——迭代队列中的每个项目
 		```
-			for i in range(1, 5): 
+			for i in range(1, 5, [step] optional):  #不包含5
 				print(i)
 			else: 	# optinal，在for循环语句结束后执行，除非遇到break语句
 				print('The loop end!')	
@@ -135,7 +135,10 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	2. 获取列表长度——len(listName)
 	3. 列表排序——list.sort() #影响列表本身
 	4. 追加列表项——list.append(item)
-	5. 删除列表项——del list[index]
+	5. 删除列表项——del list[index]或list.pop(index)
+	6. 插入列表项——list.insert(index, item)
+	7. 删除末尾列表项——list.pop
+	8. 获取索引——list.index(item)
 ###元组——不可变，用圆括号包裹的一系列值
 	```
 		zoo = ('monkey', elephen, ...)
@@ -146,15 +149,26 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	```
 		age = 23
 		name = 'Bill'
-		print('%s is %d years old'%(name, age)) #'Bill is 23 years old' $s表示字符串，%d表示整数
+		print('%s is %d years old'%(name, age)) #'Bill is 23 years old' $s表示字符串，%d表示整数，%f表示浮点数，%x表示十六进制整数，%要是一个普通字符的话，则需要转义%%
+		另一种格式化的方式：format
+			print('Hello, {0}, your age is {1}'.format('Bill', 23))
 		print('Why is %s playing with that python?'%name) #一个不需要加括号
 	```
 ###字典/对象——键要是字符串
 	1. 获取长度——len(obj)
 	2. 获取项数——obj.items()
 	3. 添加项数——obj[key] = value
-	4. 删除项数——del obj[key]	
-	5. 检验字典是否存在某个项数——in操作符
+	4. 删除项数——del obj[key]或obj.pop(key)
+	5. 检验字典是否存在某个项数——in操作符或者obj.get(item)没有该item则返回None或者obj.get(item, -1)没有该item则返回-1
+###set——不重复元素的集合
+	```
+		s = set([1, 2, 3, 2, 1])
+		print(s) #{1, 2, 3}
+	```	
+	1. 添加——s.add(item) #添加重复的没有效果
+	2. 移除——s.remove(item)
+	3. 两个set交集——s1 & s2
+	4. 两个set并集——s1 | s2
 ###序列——列表、元祖和字符串都是序列，索引操作符可以从序列中抓取一个特定项目，切片操作符可以获取序列的一系列项目
 	```
 		shoplist = ['apple', 'banana', 'tomato', 'orange']
@@ -169,3 +183,55 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	1. startswith()——判断是否以某个字符串开头
 	2. in——判断字符串中是否有某个字符
 	3. find()——返回某个字符在字符串中的索引，没有则返回-1	
+###类
+	1. 声明一个类
+		```
+			class Person(): 
+				def sayHello(self, x, y = 4):  #声明方法要传入self参数
+					print('Hello, World!', x, y)
+			p = Person()
+			p.sayHello(x = 5)		
+		```
+	2. __init__方法——相当于构造函数
+		```
+			class Person(): 
+				def __init__(self, name, age): 
+					self.name = name
+					self.age = age
+				def sayName(self): 
+					print('My name is', self.name)
+				def sayAge(self): 
+					print('My age is', self.age)
+			p = Person('Bill', 23)
+			p.sayName()
+			p.sayAge()				
+		```	
+	3. 继承
+		```
+			class SchoolMember: 
+				def __init__(self, name, age): 
+					self.name = name
+					self.age = age
+					print('Initialize schoolmember %s'%self.name)
+				def tell(self): 
+					print('Name: %s Age %s'%(self.name, self.age))
+			class Teacher(SchoolMember): 
+				def __init__(self, name, age, salary): 
+					SchoolMember.__init__(self, name, age)
+					print('Initialize teacher %s'%self.name)
+				def tell(self): 
+					SchoolMember.tell(self)
+					print('My salary is %d'%self.salary)
+			class Student(SchoolMember): 
+				def __init__(self, name, age, score): 
+					SchoolMember.__init__(self, name, age)
+					print('Initialize student %s'%name)
+				def tell(self): 
+					SchoolMember.tell(self)
+					print('My score is %d'%self.score)
+			t = Teacher('Bill', 28, 4500)
+			s = Student('Gate', 14, 96)
+			members = [t, s]
+			for member in members: 
+				member.tell()									
+		```	
