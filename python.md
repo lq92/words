@@ -72,3 +72,100 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 		```	
 	***break——终止循环，此时while和for的else语句不会执行***
 	***continue——跳出当前循环，继续下一轮循环，else语句执行***
+###函数
+	1. 定义
+		```
+			def function_name(): 
+				statement
+		```	
+	2. 作用域——定义在函数内部和外部的同名变量没有关系，内部函数只在内部有效	
+	3. 若要在函数内部使用外部定义的变量，则在函数调用前该变量已经声明，否则报错
+		```
+			def fn(): 
+				print(x)
+			x = 10 #这行变量的定义一定要在函数调用前，否则报错
+			fn()	
+		```
+	4. 在函数内容使用global来使用定义在函数外部的变量，若在函数内部修改该变量，则全局变量也变
+		```
+			def fn(): 
+				global x #指定多个全局变量global x,y,z
+				print(x) #x == 5
+				x = 10
+				print(x) #x == 10
+			x = 5
+			fn() 	
+		```	
+	5. 默认值——可以在函数形参后赋一个默认值(只能将有默认值的形参放在函数形参列表的最后)
+	6. 关键参数——在调用函数的时候将值直接传入，则不用担心传入参数的顺序
+		```
+			def fn(a, b = 10, c = 20): 
+				print(a, b, c)
+			fn(30)  #30 10 20
+			fn(b = 30, a = 40) #40 30 20
+			fn(30, 40) #30 40 20	
+		```	
+	7. return语句——从函数中返回值
+		如果不指定return语句，则默认返回None	
+	8. 文档字符串__doc__是对象的一个属性，在对象中用多行字符串定义
+		```
+			def fn(x, y): 
+				'''This is a docstring
+				test test test.'''
+			print(fn.__doc__)	
+		```
+###模块化
+	1. 通过import module导入模块，则在模块中定义的变量和函数是该模块的属性
+		```
+			import module
+			module.fn()
+			module.property
+		```
+	2. 通过from module import fn, property导入模块，则可以直接调用fn和property，未导入的不能用
+		```
+			from module import fn, property
+			fn()
+			property
+		```	
+###列表/数组
+	1. 定义
+		```
+			list = [item1, item2, ...]
+		```		
+	2. 获取列表长度——len(listName)
+	3. 列表排序——list.sort() #影响列表本身
+	4. 追加列表项——list.append(item)
+	5. 删除列表项——del list[index]
+###元组——不可变，用圆括号包裹的一系列值
+	```
+		zoo = ('monkey', elephen, ...)
+	```	
+	1. 获取长度——len(zoo)
+	2. 访问——zoo[index]
+	如果定义只有一个项的元祖，则第一个项后要加逗号—— zoo = ('monkey', )
+	```
+		age = 23
+		name = 'Bill'
+		print('%s is %d years old'%(name, age)) #'Bill is 23 years old' $s表示字符串，%d表示整数
+		print('Why is %s playing with that python?'%name) #一个不需要加括号
+	```
+###字典/对象——键要是字符串
+	1. 获取长度——len(obj)
+	2. 获取项数——obj.items()
+	3. 添加项数——obj[key] = value
+	4. 删除项数——del obj[key]	
+	5. 检验字典是否存在某个项数——in操作符
+###序列——列表、元祖和字符串都是序列，索引操作符可以从序列中抓取一个特定项目，切片操作符可以获取序列的一系列项目
+	```
+		shoplist = ['apple', 'banana', 'tomato', 'orange']
+		print(shoplist[1]) #banana
+		print(shoplist[-2]) #tomato，索引超过范围会报错
+		print(shoplist[: ]) #输出整个列表，如果第一个数不指定则从头开始，若第二个数不指定则到最后
+		print(shoplist[1: 3]) #banana, tomato
+		print(shoplist[0: -2]) #apple banana
+	```	
+	赋值操作符将一个对象赋值给另一个对象时，他们引用的是同一个对象的引用地址，当用切片操作符时，他们引用的是不同的对象
+###字符串方法
+	1. startswith()——判断是否以某个字符串开头
+	2. in——判断字符串中是否有某个字符
+	3. find()——返回某个字符在字符串中的索引，没有则返回-1	
