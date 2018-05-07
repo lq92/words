@@ -32,6 +32,11 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	声明变量时只需赋值，不需要声明变量类型
 ###数据类型
 	数、字符串和类、Boolean(True, False)		
+	1. 数据类型转换
+		* int()——转换成整数
+		* float()——转换成浮点数
+		* str()——转换成字符串
+		* bool()——转换成布尔值('', 0, 空对象, 空数组, 空set为False)
 ###运算符
 	1. x**y：表示x的y次幂
 	2. x//y：表示取商的整数部分
@@ -96,7 +101,13 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 			x = 5
 			fn() 	
 		```	
-	5. 默认值——可以在函数形参后赋一个默认值(只能将有默认值的形参放在函数形参列表的最后)
+	5. 默认值——可以在函数形参后赋一个默认值(只能将有默认值的形参放在函数形参列表的最后，默认参数要是不可变对象)
+		```
+			def fn(l = []): 
+				l.append('hello')
+			fn() #l = ['hello']
+			fn() #l = ['hello', 'hello']	
+		```
 	6. 关键参数——在调用函数的时候将值直接传入，则不用担心传入参数的顺序
 		```
 			def fn(a, b = 10, c = 20): 
@@ -114,6 +125,31 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 				test test test.'''
 			print(fn.__doc__)	
 		```
+	9. 空函数——可以定义一个空函数什么都不用做，但是要传入pass，pass是一个占位符
+		```
+			def fn():
+				pass #此时不会报错，缺少pass则报错
+		```	
+	10. 可变参数——在函数形参前加上*，即可让参数变成形参，这可以让函数在调用时传入不定个数实参
+		```
+			def fn(*numbers): 
+				sum = 0
+				for number in numbers: 
+					sum = sum + number ** 2
+				return sum
+			fn(1, 2, 3)
+			fn(1, 2, 3, 4)
+			list = [1, 2, 3, 4, 5]
+			fn(*list)		
+		```	
+	11. 关键字参数——关键字参数允许传入任意个含参数名的参数，这些参数在函数内部自动组装成一个dict
+		```
+			def person(name, age, **key): 
+				print('Name: ', name, 'Age: ', age, 'Others: ', key)
+			person('Bill', 23, city = 'Beijing') # key = { 'city': 'beijing' }
+			dict = { 'score': 60, 'city': 'Shanghai' }
+			person('Gate', 24, **dict)	
+		```	
 ###模块化
 	1. 通过import module导入模块，则在模块中定义的变量和函数是该模块的属性
 		```
@@ -141,7 +177,7 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	8. 获取索引——list.index(item)
 ###元组——不可变，用圆括号包裹的一系列值
 	```
-		zoo = ('monkey', elephen, ...)
+		zoo = ('monkey', 'elephen', ...)
 	```	
 	1. 获取长度——len(zoo)
 	2. 访问——zoo[index]
@@ -154,6 +190,11 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 			print('Hello, {0}, your age is {1}'.format('Bill', 23))
 		print('Why is %s playing with that python?'%name) #一个不需要加括号
 	```
+	3. 元祖的项可以使用变量一一对应赋值
+		```
+			m, e = ('monkey', 'elephen')
+			print(m, e) #m = 'monkey', e = 'elephen'
+		```
 ###字典/对象——键要是字符串
 	1. 获取长度——len(obj)
 	2. 获取项数——obj.items()
@@ -235,3 +276,4 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 			for member in members: 
 				member.tell()									
 		```	
+###内置函数(https://docs.python.org/3/library/functions.html)
