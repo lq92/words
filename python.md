@@ -201,6 +201,18 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	3. 添加项数——obj[key] = value
 	4. 删除项数——del obj[key]或obj.pop(key)
 	5. 检验字典是否存在某个项数——in操作符或者obj.get(item)没有该item则返回None或者obj.get(item, -1)没有该item则返回-1
+	6. 获取key——obj.keys()，返回一个list
+	7. 获取value——obj.values()，返回一个list
+	8. 迭代
+		```
+			dict = { 'a': 1, 'b': 2, 'c': 3}
+			for i in dict: # == for i in dict.keys(): 
+				print(i) # a,b,c
+			for i in dict.values(): 
+				print(i) # 1,2,3
+			for k,v in dict.items(): 
+				print(k, '=', v) #k = a,b,c v = 1,2,3	
+		```
 ###set——不重复元素的集合
 	```
 		s = set([1, 2, 3, 2, 1])
@@ -277,3 +289,9 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 				member.tell()									
 		```	
 ###内置函数(https://docs.python.org/3/library/functions.html)
+###迭代
+	1. 迭代list的索引和值
+		```
+			for key, val in enumerate([1, 2, 3]): 
+				print(key, val) # 0 1, 1 2, 2 3
+		```
