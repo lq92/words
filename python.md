@@ -182,7 +182,7 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 	6. 插入列表项——list.insert(index, item)
 	7. 删除末尾列表项——list.pop
 	8. 获取索引——list.index(item)
-###元组——不可变，用圆括号包裹的一系列值
+###元组tuple——不可变，用圆括号包裹的一系列值
 	```
 		zoo = ('monkey', 'elephen', ...)
 	```	
@@ -346,7 +346,7 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 						print(e.value)
 						break	
 			```
-###迭代对象——可以使用for循环迭代的对象，如：list/  tuple/dict/set/str  (Iterable)
+###迭代对象——可以使用for循环迭代的对象，如：list/tuple/dict/set/str  (Iterable)
 	```
 		// 判断迭代对象
 		from collections import Iterable
@@ -362,5 +362,42 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 		bool = isinstance(tuple, Iterator) // 此时返回false
 		bool = isinstance(iter(tuple), Iterator)
 	```
-
-
+###三个高阶函数——map/reduce/sorted
+	1. map——参数：一个作用于每一项的函数和一个Iterable对象，返回新的Iterator对象，可以用list()将其转换为list
+		```
+			def multi(x): 
+				return x ** 2
+			l = [1, 2, 3, 4]
+			print(list(map(multi, l)))
+		```
+	2. reduce——参数：把函数作用域一个序列上，接收两个参数，把结果作为下一次的初始值
+		```
+			from functools import reduce
+			def sum(x, y): 
+				return x + y
+			l = [1, 2, 3, 4]
+			print(reduce(sum, l))	
+		```
+	3. sorted——参数：一个list和可选的接收排序函数的key，以及倒序排序的reverse = True，如果接收的是一个tuple，则返回一个list，原tuple不变，因为tuple是不变的
+		```
+			L = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+			def sortByScore(tuple): 
+				return tuple[1]
+			print(sorted(L, key = sortByScore))	
+		```	
+	4. filter——过滤一个序列，参数：过滤的函数(保留返回True的项数)和一个要过滤的序列	，返回Iterator
+		```
+			// 求素数
+			def prime(arr):
+				max_num = max(arr)
+				def removeTwo(x): 
+					return x % 2 != 0 or x == 2
+				arr = list(filter(removeTwo, arr))	
+				n = 1
+				while n < max_num: 
+					n += 2
+					def removeOther(x): 
+						return x % n != 0 or x == n
+					arr = list(filter(removeOther, arr))	
+				return arr		
+		```
