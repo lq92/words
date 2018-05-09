@@ -1,4 +1,4 @@
-####进入/退出Python交互模式
+###进入/退出Python交互模式
 	打开命令行窗口输入python进入Python交互模式，输入exit()退出Python交互模式或者按ctrl+z然后enter退出
 
 print(): 打印字符串，接收一个或一组字符串，一组字符串中间用逗号分隔，且在解析的时候逗号被解析为空格
@@ -346,3 +346,21 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 						print(e.value)
 						break	
 			```
+###迭代对象——可以使用for循环迭代的对象，如：list/  tuple/dict/set/str  (Iterable)
+	```
+		// 判断迭代对象
+		from collections import Iterable
+		bool = isinstance({}, Iterable)
+	```
+	可以被next()函数调用并不断返回下一个值的对象成为迭代器(Iterator)
+	Iterator对象表示的是一个数据流，Iterator对象可以被next()函数调用不断返回下一个数据，直到没有数据返回StopIteration错误，是无法提前知道序列的长度
+	如：str/dict/list/tuple都不是Iterator，可以使用iter()函数将其转换成Iterator
+	```
+		from collections import Iterator
+		bool = isinstance((x for x in range(10)), Iterator) // 这里的数据类型不是tuple而是generator，且返回true
+		tuple = (1, 2, 3, 5)
+		bool = isinstance(tuple, Iterator) // 此时返回false
+		bool = isinstance(iter(tuple), Iterator)
+	```
+
+
