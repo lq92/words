@@ -420,3 +420,39 @@ print(): 打印字符串，接收一个或一组字符串，一组字符串中�
 					arr = list(filter(removeOther, arr))	
 				return arr		
 		```
+###面向对象
+	1. 获取对象的信息		
+		* 判断基本数据类型：type()函数/isinstance()函数
+			```
+				type(12) => init
+				type(1.2) => float
+				type(True) => bool
+				type('string') => str
+
+				isinstance(12, int)
+			```			
+		* 判断一个对象是否是函数：用type(variable)和types模块中的常量来判断
+			```
+				import types
+				def fn(): 
+					pass
+				type(fn) == types.FunctionType
+				type(abs) == types.BuiltinType
+				type((x for x in range(10))) == types.GeneratorType
+				type(lambda x : x ** 2) == types.LambdaType	
+			```	
+		* 判断类的继承关系：isinstance(instance, Class)	
+		* 获取一个对象的所有的属性：dir(dict)返回一个包含所有属性的list
+		* 判断对象是否有某个属性/方法：hasattr(dict, property)
+		* 设置对象的某个属性：setattr(dict, property_name, property_value)
+		* 获取对象的某个属性值：getattr(dict, property_name, [error_status])，如果获取属性不存在，则报错，可以设置一个可选的报错代码
+	2. 类属性——在类中定义的属性，类本身和实例都可以访问，若是实例中的属性和类属性同名则获取时返回的是实例属性
+		```
+			class Student(object): 
+				grade = 'One'
+				def __init__(self, name, age): 
+					self.name = name
+					self.age = age
+			s1 = Student('Bill', 23)
+			s1.grade == Student.grade		
+		```	
