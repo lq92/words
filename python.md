@@ -505,18 +505,55 @@
 				def age(self):				# 只获取age属性
 					return time.gmtime().tm_year - self.__birth
 		```
-    6. [多重继承](https://kevinguo.me/2018/01/19/python-topological-sorting/)——一个类继承多个父类的属性和方法
-        ```
-            class Mammal(object): 
-                def drinking(self): 
-                    print('I\'m is drinking!')
-            class RunningMixin(object): 
-                def running(self): 
-                    print('I\'m is running!')
-            class Dog(Mamal, RunningMixin):    # 继承Mamal和RunningMixin类     
-                def __init__(self, name):              
-                    self.name = name
-            d = Dog('Eddi')
-                           
-        ```    
+	6. [多重继承](https://kevinguo.me/2018/01/19/python-topological-sorting/)——一个类继承多个父类的属性和方法
+    ```
+        class Mammal(object): 
+            def drinking(self): 
+                print('I\'m is drinking!')
+        class RunningMixin(object): 
+            def running(self): 
+                print('I\'m is running!')
+        class Dog(Mamal, RunningMixin):    # 继承Mamal和RunningMixin类     
+            def __init__(self, name):              
+                self.name = name
+        d = Dog('Eddi')
+                       
+    ```    
+### IO操作
+	1. 操作文件
+		* 读文件——open(dirname, module)
+			```
+				f = open('./test.txt', 'r')				# r表示只读模式,如果文件不存在则报错
+				f.read()				# 表示读取文件内容
+				f.close()				# 关闭文件
+			```    
+			由于文件读写时可能会产生错误，一旦出错则后续的close方法无法调用,可以使用try语句或者Python内置的with语句
+			```
+				try: 
+					f = open('./test.txt', 'r')
+					print(f.read())
+				finally: 
+					if f: 
+						f.close()	
+				------------------------
+				with open('./text.txt', 'r') as f:				# 会自动调用close()方法 
+					print(f.read())		
+			```
+			调用read()会一次性读取所有的数据，可以调用read(size)size表示字节来读取一部分数据，调用readline()读取一行数据，调用readlines()一次读取所有的内容并按行返回一个list
+			二进制文件
+				```
+					with open('./test.jpg', 'rw') as f: 
+						print(f.read())
+					f.close()	
+				```
+			如果读取非utf-8类型的文件，open接收第三个参数encoding，如果文件编码不规范会抛出UnicodeDecodeError，可以使用第四个参数忽略错误
+				`with open('./test.txt', 'r', ecoding = 'gbk', errors = 'ignore')`	
+		* 写文件
+			```
+				f = open('../test/txt', 'w')
+				f.write(content)
+				f.close()
+			```
+			可以反复调用write()来写文件，但是务必调用close()来关闭文件，当操作写文件时，操作系统一般会将内容存储在内存中，空闲的时候再写入，只有调用close()方法才能保证把所有的内容都写入到磁盘，如果w模式下文件已经存在，则文件会直接覆盖，若想追加module改为'a'
+
 
