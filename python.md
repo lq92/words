@@ -1,5 +1,5 @@
 ### 进入/退出Python交互模式
-	打开命令行窗口输入python进入Python交互模式，输入exit()退出Python交互模式或者按ctrl+z然后enter退出
+	打开命令行窗口输入python进入Python交互模式，输入`exit()`退出Python交互模式或者按`ctrl+z`然后enter退出
 
 	print(): 打印字符串，接收一个或一组字符串，一组字符串中间用逗号分隔，且在解析的时候逗号被解析为空格
 	执行Python文件: 进入文件所在目录后执行: python xxx.py(文件名只能是英文、数字、下划线组合)	
@@ -302,7 +302,7 @@
 			for member in members: 
 				member.tell()									
 		```	
-### 内置函数(https://docs.python.org/3/library/functions.html)
+### [内置函数](https://docs.python.org/3/library/functions.html)
 	1. range(start, end, [step])——依次返回范围内的数，通常用于for循环
 		```
 			for i in range(1, 10, 2): 
@@ -428,7 +428,6 @@
 				type(1.2) => float
 				type(True) => bool
 				type('string') => str
-
 				isinstance(12, int)
 			```			
 		* 判断一个对象是否是函数：用type(variable)和types模块中的常量来判断
@@ -506,4 +505,18 @@
 				def age(self):				# 只获取age属性
 					return time.gmtime().tm_year - self.__birth
 		```
+    6. [多重继承](https://kevinguo.me/2018/01/19/python-topological-sorting/)——一个类继承多个父类的属性和方法
+        ```
+            class Mammal(object): 
+                def drinking(self): 
+                    print('I\'m is drinking!')
+            class RunningMixin(object): 
+                def running(self): 
+                    print('I\'m is running!')
+            class Dog(Mamal, RunningMixin):    # 继承Mamal和RunningMixin类     
+                def __init__(self, name):              
+                    self.name = name
+            d = Dog('Eddi')
+                           
+        ```    
 
