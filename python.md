@@ -32,6 +32,7 @@
 		* startswith()——判断是否以某个字符串开头
 		* in——判断字符串中是否有某个字符
 		* find()——返回某个字符在字符串中的索引，没有则返回-1	
+        * strip(string)——如string省略则默认删除字符串前后空格，包含回车符、制表符、换行符，如有参数则删除字符串前后含有string组成的字符，直到遇到不包含在string中的字符为止
 ### 变量
 	1. 标识符——以英文(大写或小写)或_开头，后面可以跟英文或者数字或者下划线，标识符对大小写敏感
 	2. 声明变量时只需赋值，不需要声明变量类型
@@ -550,10 +551,69 @@
 				`with open('./test.txt', 'r', ecoding = 'gbk', errors = 'ignore')`	
 		* 写文件
 			```
-				f = open('../test/txt', 'w')
+				f = open('../test/txt', 'w')             # 如果文件不存在则创建
 				f.write(content)
 				f.close()
 			```
 			可以反复调用write()来写文件，但是务必调用close()来关闭文件，当操作写文件时，操作系统一般会将内容存储在内存中，空闲的时候再写入，只有调用close()方法才能保证把所有的内容都写入到磁盘，如果w模式下文件已经存在，则文件会直接覆盖，若想追加module改为'a'
+    2. 操作内存数据
+        ***steam position***
+        * 字符串
+            ```
+                from io import StringIO
+                f = StringIO('string') # 未初始化数据，接收一个可选的初始化数据
+                f.write('xxxx') # 写入数据
+                f.getvalue()                # 获取数据
+            ```  
+            --------------------------------------------- 
+            ```
+                # 初始化数据后可以通过读文件操作来读取数据
+                from io import StringIO
+                s = StringIO('This is first string \n This is second string \n This is third string')
+                for i in s.readlines(): 
+                    print(i.strip())
+            ```
+        * 二进制
+            ```
+                from io import BytesIO
+                f = BytesIO()
+                f.write('编程'.encode('utf-8'))
+                print(f.getvalue())
+            ```
+            ---------------------------------------------
+            ```
+                # 初始化二进制后可以通过读文件来读取数据
+                from io import BytesIO
+                b = BytesIO('\xe7\xbc\x96\xe7\xe8\x8b')
+                print(b.read())
+            ```
+    3. 操作文件和目录
+        ```
+            # 文件模块由os模块提供
+            import os
+            print(os.path.abspath(''))              # 返回当前目录的绝对路径
+        ```
+        os.path.join(dirname1, dirname2)            # 组合两个路径
+        os.path.split(dirname)
+        os.path.splitext(dirname)
+        os.mkdir(dirname)
+        os.rmdir(dirname)
+        os.rename('ori_filename', 'new_filename')
+        os.remove(filename)
+        ```
+            # 复制文件
+            with open('./test.txt', 'r') as ori_file: 
+                with open('./testcopy.txt', 'w') as copy_file: 
+                    copy_file.write(ori_file.read())
+        ```
+        ----------------------------------------------------
+        ```
+            import os
+            print([x for x in os.listdir('.')])      # 返回当前目录下所有的文件/文件夹
+            print([x for x in os.listdir('.') if os.path.isdir(x)])             # 返回当前目录下所有的文件夹
+            print([x for x in os.listdir('.') if os.path.isfile(x)])    # 列出当前目录下所有的文件
+            print([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[0] == '.py'])    # 列出所有以.py结尾的文件
+            os.path.relpath(path, start = os.curdir)
+        ```
 
 
