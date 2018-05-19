@@ -91,7 +91,7 @@
       运算符优先级：()函数调用或括号、.运算符、[]数组下标访问运算符优先级最高；new运算符、一元运算符、typeof元素符优先级次之
       注：当new运算符后跟对象创建时优先级提高(即：new Object()比new Object优先级高)
       (https://www.v2ex.com/t/351261)
-    7. Cookie/sessionStorage/localStorage
+    7. Cookie/sessionStorage/localStorage/indexedDB(https://www.cnblogs.com/cencenyue/p/7604651.html)
     	* cookie——在浏览器和服务器之间来回传递，除非过期，否则一直存在，4k，一般用于状态管理
     	* sessionStorage——周期只存在会话打开(重新加载不影响)即使重新打开同一个页面也不共享数据，5M
     		方法：setItem(key, val)/getItem(key)/removeItem(key)/clear()/key(index)
@@ -104,6 +104,7 @@
     				console.log(localStorage.getItem(localStorage.key(i)))
     			}
     		```
-  	(https://www.cnblogs.com/cencenyue/p/7604651.html)
+    	* [IndexedDB](http://www.tfan.org/using-indexeddb/)——让应用在用户的浏览器内持久化存储数据的方法，提供了丰富的查询能力，使应用在在线和离线时都可以工作
+  	
 
 
