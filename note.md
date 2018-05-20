@@ -105,6 +105,39 @@
     			}
     		```
     	* [IndexedDB](http://www.tfan.org/using-indexeddb/)——让应用在用户的浏览器内持久化存储数据的方法，提供了丰富的查询能力，使应用在在线和离线时都可以工作
+    8. 跨域——由浏览器的同源策略引起的，即同一域名、端口号、协议才能通信
+      同源策略限制以下几种行为：
+        1. Cookie/localStorage/indexedDB无法获取
+        2. DOM和JS对象无法获得
+        3. Ajax请求不能发送
+      解决方式：
+        1. jsonp——img的src属性、link的href属性和script的src属性不存在跨域
+          ```
+            function jsonHandler(data){
+              console.log(data)
+            }
+            let script = document.createElement('script'),
+                url = 'https://api.douban.com/v2/book/search?q=javascript&count=1&callback=jsonHandler';
+            script.src = url;
+            document.body.appendChild(script)
+          ```
+          只能实现get请求
+        2. 跨资源共享(CORS)——普通跨域请求，服务端只设置Access-Control-Allow-Origin即可，前端无需设置，若要带Cookie请求，前后端都要设置
+          ```
+            let xhr = new XMLHttpRequest();
+            xhr.withCredentials = true; // 前端设置是否带cookie
+            xhr.open(method, url);
+            xhr.send();
+            xhr.addEventListener('readystatechange', () => {
+              if(xhr.readyState === 4 && xhr.status === 200){
+                console.log(xhr.responeseText)
+              }
+            })
+          ```
+        3. postMessage
+        4. WebSocket
+        5. nodejs中间件代理跨域
+        6. nginx反向代理
   	
 
 
