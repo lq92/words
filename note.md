@@ -163,6 +163,86 @@
         减少DOM查询，对DOM查询做缓存
         减少DOM操作，多个操作尽量合并在一起执行(DocumentFragment)
         事件节流
+    14. Promise——用来解决异步回调地狱的问题
+      ```
+        let promise = new Promise((resolve, reject) => {
+          if(/* 异步代码成功 */){
+            resolve(value)
+          }else{
+            reject(error) // 异步代码失败
+          }
+        })
+        promise.then(value => {
+          // success
+        }, error => {
+          // fail
+        })
+      ```
+      promise异步加载图片
+      ```
+        function loadImage(url){
+          return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.addEventListener('load', () => {
+              resolve(img);
+            })
+            img.addEventListener('error', () => {
+              reject(Error('The url is not found!'));
+            })
+            img.src = url;
+          })
+        }
+        loadImage('xxx').then(img => {
+          document.body.appendChild(img)
+        })
+      ```
+      promise Ajax请求
+      ```
+        function getJSON(url){
+          return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            function handler(){
+              if(this.readyState === 4 && this.status === 200){
+                resolve(this.response);
+              }else{
+                reject(Error(`error: ${this.status}`));
+              }
+            }
+            xhr.open('GET', url);
+            xhr.addEventListener('readystatechange', handler);
+            xhr.responseType = 'json';
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send();
+          })
+        }
+      ```
+    15. flatten实现
+      ```
+        let arr = [[1, 2, [3, 4]], [[[[5]]]], 6, 7];
+        function flatten(source, target){
+          target = target || [];
+          source.forEach(item => {
+            if(Array.isArray(item)){
+              flatten(item, target);
+            }else{
+              target.push(item);
+            }
+          })
+          return target;
+        }
+        let a = flatten(arr)
+      ```
+      reduce实现
+      ```
+        function flatten(source){
+          return source.reduce((prev, next) => {
+            if(Array.isArray(next)){
+              return prev.concat(flatten(next));
+            }
+            return prev.concat(next);
+          }, [])
+        }
+      ```
   	
 
 
