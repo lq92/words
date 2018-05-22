@@ -253,6 +253,89 @@
           }, [])
         }
       ```
+    16. generator
+      ```
+      // for of循环
+      Object.prototype[Symbol.iterator] = function* (){
+        let keys = Object.keys(this);
+        for(let i = 0; i < keys.length; i++){
+          yield { value: this[keys[i]], done: !this[keys[i]]}
+        }
+      }
+      let obj = {
+        name: 'bill',
+        age: 23
+      }
+      for(let i of obj){
+        console.log(i)
+      }
+      ```
+      如果一个generator中要执行另一个generator要使用yield* functionname语句
+      ```
+      function* foo(){
+        yield 'x';
+        yield 'y';
+      }
+      function* bar(){
+        yield 'a';
+        yield* foo();
+        yield 'b';
+      }
+      let g = bar();
+      for(let i of g){
+        console.log(i); // a, x, y, b
+      }
+      ```
+      generator实现数组展开(flatten方法)
+      ```
+      function* flatten(arr){
+        for(let i of arr){
+          if(Array.isArray(i)){
+            yield* flatten(i);
+          }else{
+            yield i;
+          }
+        }
+      }
+      let g = flatten(arr);
+      [...g]
+      ```
+    17. class与es原型
+      class中声明的方法都是在原型上声明的，且是不可枚举的
+      ```
+      class Person(){
+        sayName(){
+          return 'Bill';
+        }
+      }
+      Object.keys(Person.prototype) // return []
+      Object.getOwnPropertyNames(Person.prototype) // return ['sayName']
+      ```
+      声明在class中的代码默认严格模式
+      class中要声明constructor方法，若没有则默认添加
+      class表达式
+      `let Person = class {}`
+      立即执行的class
+      ```
+      let person = new class {
+        constructor(name){
+          this.name = name;
+        }
+      }('Bill')
+      ```
+      不存在类提升
+      静态方法——方法前加static关键字，这个静态方法是类的方法而不是实例的方法
+      ```
+      class Person {
+        static foo(){
+          return 'foo';
+        }
+      }
+      Person.foo() // return 'foo'
+      new Person().foo() // throw error
+      ```
+      静态方法中包含this指的是类的this
+      父类的静态方法可以被子类继承
   	
 
 
