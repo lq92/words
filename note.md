@@ -164,6 +164,8 @@
         减少DOM操作，多个操作尽量合并在一起执行(DocumentFragment)
         事件节流
     14. Promise——用来解决异步回调地狱的问题
+      promise中的错误具有冒泡性质，使用catch捕获错误
+      finally不管promise是什么状态，都会执行的语句
       ```
         let promise = new Promise((resolve, reject) => {
           if(/* 异步代码成功 */){
@@ -216,6 +218,14 @@
           })
         }
       ```
+      Promise.all([promise1, promise2, ...])接收一个promise数组，如果参数有不是promise则用Promise.resolve()转为promise再操作，最终Promise.all有两个状态: 1、所有的promise为fulfiled则为fulfiled；2、有一个为rejected则为rejected
+      ```
+        let p1 = new Promise(resolve => resolve('Success'))
+        let p2 = new Promise((resolve, reject) => reject(new Error('error'))).catch(err => err)
+        Promise.all([p1, p2]).then(result => console.log(result)).catch(err => console.log(err))
+        // Promise.all的catch捕获不到错误，因为p2捕获了错误
+      ```
+      Promise.race([promise1, promise2, ...])最终的状态由参数中首先返回的状态决定
     15. flatten实现
       ```
         let arr = [[1, 2, [3, 4]], [[[[5]]]], 6, 7];
