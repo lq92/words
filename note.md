@@ -358,6 +358,62 @@
       }
       new Child().print() // return 20
       ```
+    18. 事件委托——利用事件冒泡将事件绑定在父元素上
+    19. this的指向
+      普通函数调用指向window
+      非严格模式下指向window，严格模式下指向undefined
+      对象方法调用指向调用的对象
+      构造函数调用，指向返回的新对象
+      通过call/bind/apply动态绑定的this，指向传入的对象
+      箭头函数的this指向继承父级的对象
+    20. new方法做了什么
+      新创建一个对象，并将构造函数的作用域指向这个对象
+      执行构造函数的代码
+      返回这个对象
+    21. bind实现
+      ```
+        Function.prototype.bind = Function.prototype.bind || function(){
+          let args = Array.from(arguments);
+          let context = args.shift();
+          let that = this;
+          return function(){
+            let innerArgs = Array.from(arguments);
+            return that.apply(context, args.concat(innerArgs))
+          }
+        }
+      ```
+    22. 页面加载海量数据，不阻塞UI渲染
+      ```
+        let ul = document.createElement('ul');
+        document.body.appendChild(ul);
+        ul.addEventListener('click', e => {
+          if(e.target.tagName === 'LI'){
+            console.log(e.target.innerText)
+          }
+        })
+        function data(size){
+          let arr = [];
+          for(let i = 0; i < size; i++){
+            let li = document.createElement('li');
+            li.innerText = i;
+            arr.push(li);
+          }
+          return arr;
+        }
+        let arr = data(10000);
+        function chunk(size){
+          let frag = document.createDocumentFragment();
+          for(let i = 0; i < size; i++){
+            let item = arr.shift();
+            if(item){
+              frag.appendChild(item)
+            }
+          }
+          ul.appendChild(frag);
+          setTimeout(chunk, 0, 4)
+        }
+        chunk(4)
+      ```
   	
 
 
