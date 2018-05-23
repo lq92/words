@@ -336,6 +336,28 @@
       ```
       静态方法中包含this指的是类的this
       父类的静态方法可以被子类继承
+      new.target检测函数是否通过new调用，普通函数中返回undefined
+      子类中调用父类的super方法，this指向当前子类的实例
+      ```
+      class Parent {
+        constructor(){
+          this.x = 10;
+        }
+        print(){
+          return this.x;
+        }
+      }
+      class Child extends Parent {
+        constructor(){
+          super();
+          this.x = 20;
+        }
+        print(){
+          return super.print();
+        }
+      }
+      new Child().print() // return 20
+      ```
   	
 
 
