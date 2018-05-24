@@ -160,3 +160,65 @@
         let divide = val => val / 2;
         let f = pipe(plus, subtract, multi, divide)
         f(20) // return 722
+    * 尾调用——函数的最后一步是调用另一个函数
+        优化：防止堆栈溢出
+        function outFact(n, total){
+            if(n === 1) return total;
+            return outFact(n - 1, n * total)
+        }
+        function fact(n){
+            return outFact(n, 1)
+        }
+        function fib(n, a = 1, b = a){
+            if(n <= 1) return b;
+            return fib(n - 1, b, a + b)
+        }
+## 数组的扩展
+    * 扩展运算符...——将数组展开，相当于函数...rest的逆运算
+        [1, 2, 3].push(...[4, 5, 6])
+        复制数组
+            let copy = [1, 2, 3].concat();
+            let copy = [...[1, 2, 3]];
+            let [...copy] = [1, 2, 3]
+        合并数组
+            let a = [1, 2, 3], b = [4, 5, 6], c = [7, 8, 9];
+            let d = a.concat(b, c)
+            let d = [...a, ...b, ...c]
+        与解构赋值结合——必须放在最后，否则报错
+            let [a, ...arr] = [1, 2, 3, 4] // a = 1, arr = [2, 3, 4]
+        实现了Iterator即可用扩展运算符
+            [...'hello'] // ['h', 'e', 'l', 'l', 'o']
+            function* g(){ yield 1; yield 2; yield 3;}
+            [...g()] // [1, 2, 3]
+    * Array.from——将类数组对象和部署了Iterator的对象转换为数组
+        类数组对象——只要有length属性的对象
+            let o = { a: 1, b: 2, length: 3 } Array.from(o) // return [undefined, undefined, undefined]
+        还可以接收一个函数参数，作用和map的函数类似，将数组项作用于函数后返回
+            Array.from([1, 2, 3], x => Math.pow(x, 3)) // return [1, 8, 27]
+        判断函数参数的数据类型
+            function type(){
+                return Array.from(arguments, x => typeof x);
+            }
+            function type(...arg){
+                return arg.map(item => typeof item);
+            }
+        还可以接收指向this值的参数
+            let obj = { a: 1, b: 2, c: 3 };
+            Array.from(['a', 'b', 'c'], function(item){
+                return this[item]; // return [1, 2, 3]
+            }, obj)
+    * Array.of()——将一组值转换为数组，弥补Array的不足
+        Array.of(3) // return [3]
+        Array(3) // return [undefined * 3]
+    * copyWithin(target, start, end)——从start到end复制到target上，返回原数组
+    * find()和findIndex()——一个返回数组项，一个返回下标，都接收一个函数和指向this的obj作为参数，find未找到返回undefined，findIndex未找到返回-1，回调函数可以接收三个参数(item, index, arr)
+    * fill(item, start, end)——从start到end填充item，如果填充的是对象，则填充地址
+    * entries()/keys()/values()——用于遍历数组，返回Iterator
+        let arr = ['a', 'b', 'c', 'd'];
+        for(let k of arr.keys()){ console.log(k) } // return 0, 1, 2, 3
+        for(let v of arr.values()){ console.log(v) } // return 'a', 'b', 'c', 'd'
+        for(let [k, v] of arr.entries()){ console.log(k, v) } // return [0, 'a'], [1, 'b'], [2, 'c'], [3, 'd']
+    * includes(val, start)——判断数组中从start起是否有val，NaN
+        Array.prototype.includes = Array.prototype.includes || function(val, start){
+            return this.indexOf(val, start) !== -1;
+        }
