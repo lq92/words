@@ -288,6 +288,7 @@
             return Object.assign({}, p, origin);
             // return Object.assign(Object.create(p), origin);
         }
+        let clone = origin => Object.assign(Object.create(Object.getPrototypeOf(origin), Object.getOwnPropertyDescriptors(origin)))
     * 对象的可枚举属性(enumerable)
         如果为false则for...in/JSON.stringify/Object.keys/Object.assign忽略
     * 属性遍历
@@ -331,3 +332,68 @@
         // x = 1，obj = { z: 3 }
         如果使用解构赋值，则扩展运算符(...)后必须是一个变量名，而不能是一个解构赋值表达式
         let {x, ...{y, z}} = o // 报错
+## Symbol
+    * 数据类型
+        undefined/null/Number/String/Boolean/Object/Symbol
+        typeof返回'undefined'/'number'/'string'/'boolean'/'object'/'symbol'
+    * Symbol是一种基本数据类型Symbol('test')接收一个描述性字符串
+    * Symbol值不能与其他类型的值进行运算，会报错
+        'String ' + Symbol('test') // TypeError
+    * 将Symbol转为字符串——String()/Symbol().toString()
+    * Symbol可以转换为布尔值，不能转为数值
+        Boolean(Symbol()) // true
+    * Symbol.for(str)——该方法会先在全局范围内查找是否有以str作为名称的值，如果有则返回，否则新建一个，生成的值在全局范围内登记，Symbol(str)则不会在全局内登记
+        let s1 = Symbol.for('str'), s2 = Symbol.for('str') // s1 === s2
+        let s1 = Symbol('str'), s2 = Symbol.for('str') // s1 !== s2
+        Symbol(str)方法没有登记机制，每次都返回不同的Symbol
+    * Symbol.kefFor(symbol)——返回一个已登记的symbol的key
+        let s1 = Symbol.for('test'), s2 = Symbol('test');
+        Symbol.keyFor(s1) // 'test'
+        Symbol.keyFor(s2) // undefined
+## Set和Map
+    * Set的数据结构类似数组，但不包括重复的值(NaN与NaN相等，其余情况按照===判断)，构造函数接收一个数组或部署了Iterator，可以使用链式调用
+        function* fib(n){
+            let [a, b] = [0, 1];
+            let num = 0;
+            while(num < n){
+                yield b;
+                [a, b] = [b, a + b];
+                num++;
+            }
+        }
+        let s = new Set(fib(10))
+        // s = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+    * Set实例的属性
+        constructor指向Set构造函数
+        size表示实例对象的成员总数
+    * Set实例方法
+        add()添加成员
+        delete()删除成员
+        has()判断是否有成员
+        clear()清空对象
+    * Set的遍历
+        keys()/values()/entries()/forEach()
+        keys()——返回键和values()返回的结果一致
+        entries()——返回键值对
+        keys/values/entries返回的都是Iterator对象
+        forEach与数组的forEach一致
+        应用：
+            去除重复数组
+                let arr = [];
+                let { random, floor } = Math;
+                let i = 0;
+                while(i < 20){
+                    arr.push(floor(random() * 20));
+                    i++;
+                }
+                [...new Set(arr)]
+                Array.from(new Set(arr))
+            将Set转化为数组后就可以用数组的所有方法了
+                let s = new Set([1, 2, 3, 4, 5, 6, 7, 8]);
+                new Set(Array.from(s, x => x + 2))
+                new Set([...set].filter(x => x % 2 === 0))
+            求两个Set的交集、并集、差集
+                let s1 = new Set([1, 2, 3, 4]),
+                    s2 = new Set([2, 3, 5]);
+                new Set([...s1, ...s2])
+                new Set([...s1].filter(x => s2.has(x)))
