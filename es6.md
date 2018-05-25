@@ -222,3 +222,112 @@
         Array.prototype.includes = Array.prototype.includes || function(val, start){
             return this.indexOf(val, start) !== -1;
         }
+## 对象的扩展
+    * 属性/方法简洁表示法——属性名为变量名，属性值为变量值
+        let v = 'v', o = { v } // o.v = 'v'
+        如果某个方法是generator，则在前面加上*
+        let o = {
+            * m(){
+                yield 'Hello, World!';
+            }
+        }
+        属性名可以使用表达式的值
+        let foo = 'a';
+        let obj = {
+            [foo]: 'b', // a: 'b'
+            ['1' + '2']: 'c' // 12: 'c'
+        }
+        属性表达式如果是一个对象，默认情况下会自动转为字符串[object Object]
+        let a = {}, b = {};
+        let o = { [a]: '123', [b]: '456' }
+        o // { [object Object]: '456' }
+    * 方法的name属性
+        如果方法是一个set或get方法，则name属性存在该方法的属性描述符上
+        let o = {
+            get method(){},
+            set method(val){}
+        }
+        let d = Object.getOwnPropertyDescriptor(o, 'method')
+        d.set.name // 'set method'
+        d.get.name // 'get method'
+        如果方法名是一个Symbol，则返回Symbol的描述
+        let s1 = Symbol('hello'), s2 = Symbol();
+        let o = { [s1](){}, [s2](){} }
+        o[s1].name // '[hello]'
+        o[s2].name // ''
+    * Object.is()——判断两个值是否相等，相当于===，但是NaN等于NaN，-0不等于+0
+        Object.defineProperty(Object, 'is', {
+            value(x, y){
+                if(x === y){
+                    return x !== 0 || 1 / x === 1 / y;
+                }
+                return x !== x && y !== y;
+            },
+            configurable: true,
+            enumerable: false,
+            writable: true
+        })
+    * Object.assign(target, [...source])——将原对象的可枚举属性添加到目标对象上
+        继承的属性不拷贝，不可枚举属性不拷贝，Symbol属性也拷贝
+        如果源对象有取值函数，则求值后再拷贝
+        let source = {
+            get foo(){
+                return 'foo';
+            }
+        }
+        let o = Object.assign({}, source) // o = { foo: 'foo' }
+        拷贝原型链上的属性
+        class Person {
+            constructor(name){
+                Object.assign(this, { name })
+            }
+        }
+        Person.prototype.age = 23;
+        let clone = origin => {
+            let p = Object.getPrototypeOf(origin);
+            return Object.assign({}, p, origin);
+            // return Object.assign(Object.create(p), origin);
+        }
+    * 对象的可枚举属性(enumerable)
+        如果为false则for...in/JSON.stringify/Object.keys/Object.assign忽略
+    * 属性遍历
+        for...in——遍历自身和继承的可枚举属性(不包含Symbol)
+        Object.keys(obj)——返回自身可枚举属性组成的数组(不包含Symbol)
+        Object.getOwnPropertyNames(obj)——返回自身所有属性组成的数组(不包括Symbol)
+        Object.getOwnPropertySymbols(obj)——返回自身Symbol属性组成的数组
+        Reflect.ownKeys(obj)——返回自身所有的属性组成的数组
+    * Object.getOwnPropertyDescriptors(obj)/Object.getOwnPropertyDescriptor(obj, property)——返回对象的属性描述符对象
+        let mixin = obj => ({
+            with: (...mixins) => mixins.reduce((prev, next) => Object.create(prev, Object.getOwnPropertyDescriptors(next)), obj)
+        })
+    * 设置原型——Object.setPrototypeOf(child, parent)
+    * 获取原型——Object.getPrototypeOf(obj)
+    * 指向原型——super
+        let o = { foo: 'hello' }, o1 = { foo: 'world', f(){ return super.foo }};
+        Object.setPrototypeOf(o1, o);
+        o1.f() // return 'hello'，必须这样定义super
+        let parent = { name: 'bill', getName(){ return this.name; } };
+        let child = { name: 'gate', getName(){ return super.getName() }};
+        Object.setPrototypeOf(child, parent);
+        child.getName(); // return 'gate'
+    * Object.keys(obj)/Object.values(obj)/Object.entries(obj)
+    * 对象的扩展运算符和解构赋值
+        let o = { school: 'middle' };
+        Object.defineProperties(o, {
+            name: {
+                value: 'bill',
+                enumerable: true
+            },
+            age: {
+                value: 23
+            }
+        })
+        let { name, t, ...test} = o
+        // name = 'bill'，t = undefined，test = { school: 'middle' }
+        解构赋值是浅拷贝，不复制继承的值
+        let o = Object.create({ x: 1, y: 2 });
+        o.z = 3;
+        let {x, ...obj} = o;
+        // x = 1，obj = { z: 3 }
+        如果使用解构赋值，则扩展运算符(...)后必须是一个变量名，而不能是一个解构赋值表达式
+        let {x, ...{y, z}} = o // 报错
