@@ -397,3 +397,81 @@
                     s2 = new Set([2, 3, 5]);
                 new Set([...s1, ...s2])
                 new Set([...s1].filter(x => s2.has(x)))
+    * Map数据结构——表示对象，可以使用任意数据类型作为键，Map构造函数可以接收一个数组作为参数，该数组的成员是表示键值对的数组，如果对同一个键多次赋值，后面的会覆盖前面的
+        let s = new Set([[1, 2], [3, 4], [1, 2]])
+        let m = new Map(s)
+        s.size // 3
+        m.size // 2
+    * Map的属性和方法
+        size
+        set(key, val)
+        get(key)
+        delete(key)
+        has(key)
+        clear()
+    * Map的遍历
+        keys()
+        values()
+        entries()
+        forEach()
+        let m = new Map(['name', 'bill'], ['age', 23], ['score', 98], ['school', 'middle']);
+        m.forEach((key, val) => console.log('Key: %s, Value: %s', key, val))
+        Map转对象
+        let mapToObj = map => {
+            let obj = {};
+            for(let [key, val] of map){
+                obj[key] = val;
+            }
+            return obj;
+        }
+        对象转Map
+        let objToMap = obj => {
+            let map = new Map();
+            for(let [key, val] of Object.entries(obj)){
+                map.set(key, val);
+            }
+            return map;
+        }
+        Map转为JSON
+        let mapToJson = map => JSON.stringify(mapToObj(map))
+        JSON转为Map
+        let jsonToMap = json => objToMap(JSON.parse(json))
+## Proxy
+## Reflect
+## Promise对象
+    异步编程的解决方案，Promise有两个特点：1、对象的状态不受外界影响，只有异步操作的结果决定当前是哪种状态(pending/fulfilled/rejected)；2、一旦状态改变，就不会再改变，任何时候都会得到这个结果
+    let promise = new Promise((resolve, reject) => {
+        if(/* 异步操作成功 */){
+            resolve(value) // 异步操作成功时调用，并将结果作为参数传递出去 
+        }else{
+            resolve(error) // 异步操作失败时调用
+        }
+    })
+    promise.then(value => {
+        // resolved状态的回调函数
+    }, error => {
+        // rejected状态的回调函数
+    })
+    Promise新建后会立即执行
+    let p = function(){
+        new Promise((resolve, reject) => {
+            console.log('promise1');
+            resolve('success');
+        }).then(val => console.log(val))
+        return new Promise((resolve, reject) => {
+            console.log('promise2');
+        })
+    }
+    p()() // 输出：promise1/promise2/success
+    异步加载图片
+    let loadImg = url => {
+        return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.src = url;
+            img.addEventListener('load', function(){
+                resolve(this);
+            })
+            img.addEventListener('error', () => reject(new Error(`The ${url} isn't correct`)))
+        })
+    }
+    loadImg('xxx').then(dom => document.body.appendChild(dom))
