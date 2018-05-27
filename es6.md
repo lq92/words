@@ -440,38 +440,121 @@
 ## Reflect
 ## Promise对象
     异步编程的解决方案，Promise有两个特点：1、对象的状态不受外界影响，只有异步操作的结果决定当前是哪种状态(pending/fulfilled/rejected)；2、一旦状态改变，就不会再改变，任何时候都会得到这个结果
-    let promise = new Promise((resolve, reject) => {
-        if(/* 异步操作成功 */){
-            resolve(value) // 异步操作成功时调用，并将结果作为参数传递出去 
-        }else{
-            resolve(error) // 异步操作失败时调用
-        }
-    })
-    promise.then(value => {
-        // resolved状态的回调函数
-    }, error => {
-        // rejected状态的回调函数
-    })
+        let promise = new Promise((resolve, reject) => {
+            if(/* 异步操作成功 */){
+                resolve(value) // 异步操作成功时调用，并将结果作为参数传递出去 
+            }else{
+                resolve(error) // 异步操作失败时调用
+            }
+        })
+        promise.then(value => {
+            // resolved状态的回调函数
+        }, error => {
+            // rejected状态的回调函数
+        })
     Promise新建后会立即执行
-    let p = function(){
-        new Promise((resolve, reject) => {
-            console.log('promise1');
-            resolve('success');
-        }).then(val => console.log(val))
-        return new Promise((resolve, reject) => {
-            console.log('promise2');
-        })
-    }
-    p()() // 输出：promise1/promise2/success
-    异步加载图片
-    let loadImg = url => {
-        return new Promise((resolve, reject) => {
-            let img = new Image();
-            img.src = url;
-            img.addEventListener('load', function(){
-                resolve(this);
+        let p = function(){
+            new Promise((resolve, reject) => {
+                console.log('promise1');
+                resolve('success');
+            }).then(val => console.log(val))
+            return new Promise((resolve, reject) => {
+                console.log('promise2');
             })
-            img.addEventListener('error', () => reject(new Error(`The ${url} isn't correct`)))
+        }
+        p()() // 输出：promise1/promise2/success
+    异步加载图片
+        let loadImg = url => {
+            return new Promise((resolve, reject) => {
+                let img = new Image();
+                img.src = url;
+                img.addEventListener('load', function(){
+                    resolve(this);
+                })
+                img.addEventListener('error', () => reject(new Error(`The ${url} isn't correct`)))
+            })
+        }
+        loadImg('xxx').then(dom => document.body.appendChild(dom))
+    如果调用resolve和reject并传递参数，那么回调函数会接收这个作为参数，resolve可以接收另一个promise对象，则此时的状态由接收的Promise对象决定
+        let p1 = new Promise((resolve, reject) => {
+            setTimeout(() => reject(new Error('error')), 3000);
         })
-    }
-    loadImg('xxx').then(dom => document.body.appendChild(dom))
+        let p2 = new Promise((resolve, reject) => {
+            resolve(p1);
+        })
+        p2.then(val => console.log(val)).catch(err => console.log(err))
+    调用resolve或reject并不终结Promise参数的函数执行，resolve的Promise是在本轮事件循环的末尾执行，总晚于本轮循环的同步任务，但是将resolve或reject返回，则后续的不会执行
+        new Promise((resolve, reject) => {
+            resolve('success');
+            console.log('1')
+        }).then(val => console.log(val)) // 1/success
+        new Promise((resolve, reject) => {
+            return resolve('success');
+            console.log(1)
+        }).then(val => console.log(val)) // success
+    then方法：
+        then(resolve, reject)——接收两个回调函数，reject函数是可选的，then方法返回的是另一个Promise实例，可以在之后再调用另一个then方法
+            new Promise((resolve, reject) => {
+                resolve('success');
+            }).then(val => val).then(val => console.log(val)) // 第一个then的返回值作为第二个then回调的参数
+        链式then方法，如果前一个then返回的是一个Promise，则后一个then方法要等第一个then的回调结束后
+            new Promise((resolve, reject) => {
+                setTimeout(resolve, 3000, 'success')
+            }).then(val => {
+                console.log(val);
+                return new Promise((resolve, reject) => {
+                    setTimeout(reject, 0, new Error('error'))
+                })
+            }).then(null, err => console.log(err))
+    catch()方法：
+        用来捕获错误，相当于then(null, fn)
+        new Promise((resolve, reject)= .{
+            resolve('success');
+        }).then(val => {
+            console.log(val);
+            throw new Error('error');
+        }).catch(err => console.log(err)) // 即使resolve内部抛出的错误也可以捕获
+        Promise的错误有'冒泡'性质，会一直向后传递，直到被捕获
+        如果Promise抛出的错误没有catch捕获，则不会终止脚本的执行
+            new Promise((resolve, reject) => {
+                resolve('success');
+                throw new Error('error');
+            }).catch(err => console.log(err)) // 这个catch不会捕获错误，Promise的状态一经改变就不会再变
+            new Promise((resolve, reject) => {
+                resolve('success');
+                setTimeout(() => { throw new Error('error') }, 0)
+            }).catch(err => console.log(err)) // 这个catch会捕获错误，这个错误在下一轮事件循环抛出，此时Promise运行结束
+    finally()方法——用来指定不管Promise状态是什么都会执行的方法
+    Promise.all([p1, p2, p3])——接收一组promise对象，或者具有Iterator且返回promise的对象，最终的状态有两种结果：
+        1、如果p1/p2/p3的状态是fulfilled则将p1/p2/p3的返回值组成的数组传递出去
+            let p1 = new Promise((resolve, reject) => setTimeout(() => resolve('p1'), 3000));
+            let p2 = new Promise((resolve, reject) => setTimeout(() => resolve('p2'), 2000));
+            let p3 = new Promise((resolve, reject) => setTimeout(() => resolve('p3'), 0));
+            Promise.all([p1, p2, p3]).then(val => console.log(val)) // ['p1', 'p2', 'p3']
+        2、如果p1/p2/p3有一个状态是rejected则最终的状态就是rejected，此时第一个被reject的返回值传递给回调函数
+            let p1 = new Promise((resolve, reject) => setTimeout(() => reject('p1'), 3000));
+            let p2 = new Promise((resolve, reject) => setTimeout(() => reject('p2'), 1000));
+            let p3 = new Promise((resolve, reject) => setTimeout(() => resolve('p3'), 0));
+            Promise.all([p1, p2, p3]).then(val => console.log(val)).catch(err => console.log(err)) // p2
+            作为参数的Promise实例自己定义了catch方法，如果被rejected，并不会触发Promise.all()的catch方法
+            let p1 = new Promise((resolve, reject) => reject(new Error('error'))).catch(err => console.log(err))
+            Promise.all([p1]).catch(err => console.log(err)) //捕获不到错误
+    Promise.race([p1, p2])方法——接收一组Promise对象，最终的状态由哪个先返回决定
+        let p1 = new Promise((resolve, reject) => setTimeout(() => resolve('p1'), 2000));
+        let p2 = new Promise((resolve, reject) => setTimeout(() => reject('error'), 1000));
+        Promise.race([p1, p2]).then(val => console.log(val)).catch(err => console.log(err)) // error
+    Promise.resolve()方法——将对象转为promise对象
+        1、如果接收的对象是一个promise对象，则什么也不做
+        2、如果接收的是一个原始值，则返回状态为resolved的Promise并将值传出
+            Promise.resolve(true).then(val => console.log(val))
+            相当于：
+            new Promise((resolve, reject) => resolve('foo'))
+        3、如果参数是一个thenable对象(对象有无then方法)，则转为Promise对象，并执行then方法
+            let obj = {
+                then(resolve, reject){
+                    resolve('success')
+                }
+            }
+            Promise.resolve(obj).then(val => console.log(val)) // success
+        4、不带任何参数Promise.resolve()，直接返回一个resolved状态的Promise对象
+            注意：
