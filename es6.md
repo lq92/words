@@ -557,4 +557,55 @@
             }
             Promise.resolve(obj).then(val => console.log(val)) // success
         4、不带任何参数Promise.resolve()，直接返回一个resolved状态的Promise对象
-            注意：
+            注意：Promise.resolve()在本轮事件循环结束前执行，而不是下一轮事件循环开始
+            setTimeout(() => console.log(1))
+            Promise.resolve().then(() => console.log(2))
+            console.log(3) // 3,2,1
+    Promise.reject()方法——返回一个新的Promise，状态为rejected
+        当接收一个thenable对象时返回的值是整个thenable对象
+        let obj = {
+            then(resolve, reject){
+                reject('error');
+            }
+        }
+        Promise.reject(obj).catch(e => {
+            console.log(e === obj); // true
+            return e;
+        }).catch(err => console.log(err)) // error
+#Iterator遍历器
+    为不同的数据结构提供统一的访问接口，主要用于for...of循环
+    遍历过程：
+        创建一个指针对象，指向当前数据结构的起始位置
+        第一次调用next方法，将指针指向数据结构的第一个成员
+        第二次调用next方法，指针指向数据结构的第二个成员
+        不断调用next方法，指针向后移动，直到结束
+    let makeIterator = arr => {
+        let index = 0;
+        return {
+            next(){
+                return index < arr.length ? { value: arr[index++], done: false } : { value: undefined, done: true }
+            }
+        }
+    }
+    当使用for...of循环遍历数据结构时，会自动查找Iterator接口
+    一种数据只要部署了Iterator，则此数据是可遍历的，默认的Iterator接口部署在Symbol.iterator属性上
+    具备原生Iterator接口的数据结构：
+        Array/Map/Set/函数的arguments/String/NodeList对象/TypedArray
+    对象上部署Iterator
+        class Range {
+            constructor(start, stop){
+                this.start = start;
+                this.stop = stop;
+            }
+            [Symbol.iterator](){ return this; }
+            next(){
+                if(this.start < this.stop){
+                    return { value: this.start++, done: false };
+                }else{
+                    return { value: undefined, done: true };
+                }
+            }
+        }
+        for(let i of new Range(1, 3)){
+            console.log(i) // 1, 2
+        }
