@@ -253,6 +253,22 @@
           }, [])
         }
       ```
+      Generator实现
+      ```
+        function* flat(arr){
+          for(let val of arr){
+            if(val.constructor === Array){
+              yield* flat(val);
+            }else{
+              yield val;
+            }
+          }
+        }
+        let target = [];
+        for(let val of flat(arr)){
+          target.push(val);
+        }
+      ```
     16. generator
       ```
       // for of循环

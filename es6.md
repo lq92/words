@@ -63,7 +63,7 @@
         }
         let { a: {b, c} } = obj // b = 1, c = [2, 3], a not defined, 浅复制
         默认值——生效的条件是对象的属性值严格等于undefined
-            let { x: y = 3 } = { y = 5 } // y = 5
+            let { x: y = 3 } = { x : 5 } // y = 5
         解构嵌套对象，若父对象不存在则报错(因为此时父对象是undefined)
             let { foo: { bar } } = { bar: 3 } // TypeError
         将一个已声明的变量用于解构，要加括号
@@ -673,6 +673,18 @@
                 yield keys[i]; // yield this[keys[i]]
             }
         }
+        /////////////////// Generator
+        Object.defineProperty(Object.prototype, Symbol.iterator, {
+            enumerable: false,
+            writable: true,
+            configurable: true,
+            * value(){
+                let keys = Object.keys(this);
+                for(let i of keys.values()){
+                    yield i;
+                }
+            }
+        })
         对于类数组对象(存在数值键名和length属性)，部署Iterator接口可以直接引用数组的Symbol.iterator接口
             let obj = {
                 0: 'a',
@@ -683,7 +695,7 @@
             }
             for(let i of obj){ console.log(i) } // a/b/c
     调用Iterator接口的场合
-        1、结构赋值
+        1、解构赋值
             let set = new Set().add('a').add('b').add('c');
             let [first, ...last] = set; // first = 'a', last = ['b', 'c']
         2、扩展运算符
@@ -707,3 +719,79 @@
             let obj = { name: 'bill', age: 23 }
             let it = g();
             for(let i of it){ console.log(i) } // 1/'bill'/23/2
+    for...of循环
+        具备Iterator接口的数据接口可以使用for...of循环遍历
+        数组：
+            es5使用for...in遍历数组索引，具名索引也会遍历，for...of只遍历数值索引
+                let arr = [1, 2, 3, 4];
+                arr.foo = 'foo';
+                for(let i in arr){
+                    console.log(arr); // 0, 1, 2, 3, foo
+                }
+                for(let i of arr.keys()){
+                    console.log(i); // 0, 1, 2, 3
+                }
+        arguments对象: 
+            function fn(){
+                for(let i of arguments){
+                    console.log(i); // 1, 2, 3, 4
+                }
+            }
+            fn(1, 2, 3, 4)
+        NodeList对象: 
+            let divs = document.querySelectorAll('div');
+            for(let div of divs){
+                div.classList.add('test')
+            }
+## Generator
+    Generator函数是一个状态机，封装了多个内部状态，执行Generator函数返回一个Iterator对象
+        function* g(){
+            yield 1;
+            yield 2;
+            return 3;
+        }
+        let g1 = g(); // 返回iterator对象
+        g1.next() // { value: 1, done: false }
+        g1.next() // { value: 2, done: false }
+        g1.next() // { value: 3, done: true } // 如果没有return语句此时 { value: undefined, done: true }
+        g1.next() // { value: undefined, done: true } // 此后会一直返回这个对象
+    yield表达式执行流程：
+        1、遇到yield表达式，会暂停后面操作，并将yield后的表达式的值赋值给返回对象的value属性
+        2、下次调用next方法时，再继续往下执行，直到遇到下一个yield表达式
+        3、如果没有再遇到新的yield表达式，就一直运行到函数结束，直到return语句为止，并将return后的表达式的值，作为返回对象的value属性
+        4、如果没有return语句，则返回对象的value属性值为undefined
+    yield只能用在generator函数中，用在普通函数中会报错
+        function foo(){
+            yield 'foo'; // SyntaxError
+        }
+    yield表达式若是在另一个表达式中，需将yield表达式放在括号内
+        function* g(){
+            console.log('Hello' + yield 'World') // SyntaxError
+            console.log('Hello' + (yield 'World')) // correct
+        }
+    yield表达式在赋值表达式的右侧或者作为函数的参数可以不加括号
+        function* g(){
+            foo(yield 'a', yield 'b'); // correct
+            let foo = yield 'c'; // correct
+        }
+    next()方法的参数
+        yield表达式是没有返回值的(或者说总是返回undefined)，可以使用next接收一个参数作为上一个yield表达式返回的值
+        function* g(){
+            for(let i = 0; true; i++){
+                let test = yield i;
+                if(test){
+                    i = 0;
+                }
+            }
+        }
+        g().next(true) // 当传入true时i此时等于0
+        Generator函数从暂停到恢复运行，它的上下文运行状态是不变的，通过next参数可以让Generator函数开始运行之后，继续向函数体内注入值，在Generator运行的不同阶段从外部向内部注入不同的值，从而调整函数的行为
+        function* g(x){
+            let y = 2 * (yield x + 1);
+            let z = yield( y / 3);
+            return (x + y + z)
+        }
+        let g1 = g(5);
+        g1.next() // { value: 6, done: false }
+        g1.next(12) // { value: 8, done: false}
+        g1.next(13) // { value: 42, done: true }
