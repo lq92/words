@@ -609,3 +609,101 @@
         for(let i of new Range(1, 3)){
             console.log(i) // 1, 2
         }
+        --------------------------------------------------------
+        Object.defineProperty(Object.prototype, Symbol.iterator, {
+            configurable: true,
+            writable: true,
+            enumerable: false,
+            value(){
+                let index = 0;
+                let keys = Object.keys(this);
+                return {
+                    next: () => {
+                        return { value: this[keys[index++]], done: index > keys.length }
+                    }
+                }
+            }
+        })
+        --------------------------------------------------------
+        指定对象的遍历顺序
+        function Obj(value){
+            this.value = value;
+            this.next = null;
+        }
+        Obj.prototype[Symbol.iterator] = function(){
+            let current = this;
+            let next = () => {
+                if(current){
+                    let value = current.value;
+                    current = current.next;
+                    return { value, done: false };
+                }else{
+                    return { value: undefined, done: true }
+                }
+            }
+            return { next };
+        }
+        let o1 = new Obj(1), o2 = new Obj(2), o3 = new Obj(3);
+        o1.next = o2; o2.next = o3; // o1下一个遍历是o2，o2下一个遍历是o3
+        for(let i of o1){ console.log(i) } // 1, 2, 3
+        /////////////////// es6
+        class Obj {
+            constructor(value){
+                this.value = value;
+                this.next = null;
+            }
+            [Symbol.iterator](){
+                let current = this;
+                let next = () => {
+                    if(current){
+                        let value = current.value;
+                        current = current.next;
+                        return { value, done: false };
+                    }else{
+                        return { value: undefined, done: true }
+                    }
+                }
+                return { next };
+            }
+        }
+        /////////////////// Generator
+        Object.prototype[Symbol.iterator] = function* (){
+            let keys = Object.keys(this);
+            for(let i = 0; i < keys.length; i++){
+                yield keys[i]; // yield this[keys[i]]
+            }
+        }
+        对于类数组对象(存在数值键名和length属性)，部署Iterator接口可以直接引用数组的Symbol.iterator接口
+            let obj = {
+                0: 'a',
+                1: 'b',
+                2: 'c',
+                length: 3,
+                [Symbol.iterator]: Array.prototype[Symbol.iterator]
+            }
+            for(let i of obj){ console.log(i) } // a/b/c
+    调用Iterator接口的场合
+        1、结构赋值
+            let set = new Set().add('a').add('b').add('c');
+            let [first, ...last] = set; // first = 'a', last = ['b', 'c']
+        2、扩展运算符
+            let arr = ['b', 'c']
+            ['a', ...arr, 'd'] // ['a', 'b', 'c', 'd']
+            只要部署了iterator接口的数据类型，就可以用扩展运算符转为数组
+        3、yield*——yield*后跟一个可遍历的结构，它会调用该结构的遍历器接口
+            Object.prototype[Symbol.iterator] = function(){
+                let keys = Object.keys(this);
+                let index = 0;
+                let next = () => {
+                    return { value: this[keys[index++]], done: index > keys.length };
+                }
+                return { next };
+            }
+            function* g(){
+                yield 1;
+                yield* obj;
+                yield 2;
+            }
+            let obj = { name: 'bill', age: 23 }
+            let it = g();
+            for(let i of it){ console.log(i) } // 1/'bill'/23/2
