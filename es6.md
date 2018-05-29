@@ -912,4 +912,38 @@
             g.return(10); // { value: 4, done: false }
             g.next(); // { value: 5, done: false }
             g.next(); // { value: 10, done: true }
-    yield* 
+    yield*表达式——在一个generator函数中调用另一个generator需使用yield*表达式
+        function* foo(){
+            yield 1;
+            yield 2;
+        }
+        function* bar(){
+            yield 3;
+            yield* foo();
+            yield 4;
+        }
+        for(let i of bar()){ 
+            console.log(i); // 1/2/3/4
+        }
+    generator函数总是返回一个遍历器，因此不能作为构造函数，跟new命令一起用，会报错
+        function* foo(a, b, c){
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
+        let obj = {};
+        foo.call(obj, 1, 2, 3).next();
+        obj // { a: 1, b: 2, c: 3}
+    JS在运行的时候会产生一个全局执行环境，当中保存了所有的变量和对象，当进入函数执行时，会在全局上下文之上产生一个函数执行环境，由此形成上下文堆栈，当函数执行完毕后，将其弹出，并将控制权交还给之前的执行环境，直到所有的执行环境执行完毕之后，堆栈清空。
+## Generator的异步应用
+    function fn(){
+        return new Promise((resolve, reject) => {
+            resolve('success');
+        })
+    }
+    function* gen(){
+        yield fn();
+    }
+    let g = gen();
+    let result = g.next();
+    result.value.then(val => console.log(val)) // 'success'
