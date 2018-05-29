@@ -795,3 +795,121 @@
         g1.next() // { value: 6, done: false }
         g1.next(12) // { value: 8, done: false}
         g1.next(13) // { value: 42, done: true }
+    for...of循环——可以自动遍历Generator函数生成的Iterator对象，且不调用next方法
+        function* g(){
+            yield 1;
+            yield 2;
+            yield 3;
+            yield 4;
+            return 5;
+        }
+        for(let i of g()){
+            console.log(i) // 1/2/3/4 
+        }
+        一旦done为true时，for...of循环会停止遍历，且不包含该返回对象
+    Generator.prototype.throw——generator遍历器对象都有throw方法，可以在generator体外抛出错误，在体内捕获
+        function* g(){
+            try{
+                yield 1;
+            }catch(e){
+                console.log(e);
+            }
+        }
+        let g1 = g();
+        g1.next() // 要调用throw抛出错误，则必须调用一次next()方法
+        g1.throw('error') // 'error'
+        generator内部捕获错误后，再有错误抛出，就不会再捕捉这个错误，只能被函数体外的catch语句捕获
+            function* g(){
+                try {
+                    yield 1;
+                }catch(e){
+                    console.log('inner ' + e); // inner a
+                }
+            }
+            let g1 = g();
+            g1.next();
+            try {
+                g1.throw('a');
+                g1.throw('b');
+            }catch(e){
+                console.log('outer ' + e); // outer b
+            }
+        用throw方法抛出的错误(非generator遍历器对象的throw方法)只能被函数体外的catch语句捕获
+            function* g(){
+                try {
+                    yield 1;
+                }catch(e){
+                    console.log('inner ' + e);
+                }
+            }
+            let g1 = g();
+            g1.next();
+            try {
+                throw new Error('a');
+                throw new Error('b');
+            }catch(e){
+                console.log('outer ' + e); // outer a
+            }
+        如果generator函数内部没有捕获错误，那么抛出的错误将被外部catch捕获
+        如果generator函数内部和外部都没有部署try...catch，那么程序将报错，中断执行
+        throw()方法执行后会自动执行一条next()方法，只要generator函数内部部署try...catch，那么遍历器throw方法抛出的错误，不影响下一次遍历
+        在generator函数内部抛出的错误也可以在外部捕获
+        一旦generator执行过程中抛出错误，且没有被内部捕获，就不会再执行了，如果此后还调用next方法，将返回一个value为undefined，done为true的对象
+        function* gen(){
+            yield 1;
+            console.log('throwing an exception');
+            throw new Error('generator broke!');
+            yield 2;
+            yield 3;
+        }
+        function log(generator){
+            let v;
+            console.log('starting generator');
+            try {
+                v = generator.next();
+                console.log(`第一次运行next方法 ${v}`);
+            }catch(err){
+                console.log(`捕获错误 ${v}`);
+            }
+            try {
+                v = generator.next();
+                console.log(`第二次运行next方法 ${v}`);
+            }catch(err){
+                console.log(`捕获错误 ${v}`);
+            }
+            try {
+                v = generator.next();
+                console.log(`第三次运行next方法 ${v}`);
+            }catch(err){
+                console.log(`捕获错误 ${v}`);
+            }
+            console.log('caller done')
+        }
+        log(g())
+    Generator.prototype.return()——返回给定的值，终结generator函数，如果return不提供参数，则返回值的value属性为undefined
+        function* gen(){
+            yield 1;
+            yield 2;
+            yield 3;
+        }
+        let g = gen();
+        g.next(); // { value: 1, done: false }
+        g.return(5); // { value: 5, done: true }
+        当generator函数内有try...finally语句块时，return等到finally语句执行完毕后再返回
+            function* gen(){
+                try {
+                    yield 1;
+                    yield 2;
+                    yield 3;
+                }finally {
+                    yield 4;
+                    yield 5;
+                }
+                yield 6;
+            }
+            let g = gen();
+            g.next(); // { value: 1, done: false }
+            g.return(10); // { value: 4, done: false }
+            g.next(); // { value: 5, done: false }
+            g.next(); // { value: 10, done: true }
+    yield* 
