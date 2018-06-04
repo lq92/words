@@ -473,4 +473,60 @@
         使用Object.isSealed()——获取对象是否密封
       * Object.freeze()——冻结对象，不可扩展，不可配置，不可写
         使用Object.isFrozen()——判断对象是否冻结
-
+    25. valueOf()
+      ```
+        let o1 = { name: 1 }, o2 = { name: 2 };
+        o1 > o2 // false
+        o1 < o2 // false
+        let o3 = { 
+          name: 1,
+          valueOf(){ return this.name }
+        }
+        let o4 = {
+          name: 2,
+          valueOf(){ return this.name }
+        }
+        o4 > o3 // true
+      ```
+    26. OOP
+      ```
+        function Rectangle(length, width){
+          this.length = length;
+          this.width = width;
+        }
+        Rectangle.prototype.getArea = function(){
+          return this.length * this.width;
+        }
+        Rectangle.prototype.toString = function(){
+          return `Rectangle: ${this.length} x ${this.width}`;
+        }
+        function Square(size){
+          Rectangle.call(this, size, size);
+        }
+        Square.prototype = Object.create(Rectangle.prototype, {
+          constructor: {
+            value: Square,
+            configurable: true,
+            enumerable: true,
+            writable: true
+          }
+        })
+        Square.prototype.toString = function(){
+          let text = Rectangle.prototype.toString.call(this);
+          return text.replace('Rectangle', 'Square')
+        }
+      ```
+    27. closure
+      ```
+        function fn(){
+          let private = 1;
+          return {
+            getPrivate(){
+              return private;
+            },
+            setPrivate(val){
+              private = val;
+            }
+          }
+        }
+      ```
