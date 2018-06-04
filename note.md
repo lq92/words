@@ -466,5 +466,11 @@
   		```
   			[...new Set{}]
   		```
-
+    24. 防止对象修改
+      * Object.preventExtensions()——对象无法添加新属性
+        使用Object.isExtensible()——获取对象是否可扩展
+      * Object.seal()——密封对象，不可扩展，不可配置
+        使用Object.isSealed()——获取对象是否密封
+      * Object.freeze()——冻结对象，不可扩展，不可配置，不可写
+        使用Object.isFrozen()——判断对象是否冻结
 
