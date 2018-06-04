@@ -269,6 +269,10 @@
           target.push(val);
         }
       ```
+      牛B的实现
+      ```
+      	let flatten = arr => Array.isArray(arr) ? [].concat(...arr.map(flatten)) : arr;
+      ```
     16. generator
       ```
       // for of循环
@@ -430,6 +434,37 @@
         }
         chunk(4)
       ```
-  	
+  	23. 数组去重
+  		indexOf去重
+  		```
+  			let unique = target => {
+  				let arr = [];
+  				target.forEach(item => {
+  					if(arr.indexOf(item) === -1){
+  						arr.push(item);
+  					}
+  				})
+  				return arr;
+  			}
+  		```
+  		hash去重
+  		```
+  			let unique = target => {
+  				let hash = {};
+  				let arr = [];
+  				target.forEach(item => {
+  					let tem = typeof item + item;
+  					if(!hash[tem]){
+  						arr.push(item);
+  						hash[tem] = true;
+  					}
+  				})
+  				return arr;
+  			}
+  		```
+  		Set去重
+  		```
+  			[...new Set{}]
+  		```
 
 
