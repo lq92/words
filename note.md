@@ -51,6 +51,12 @@
               return target;
           };
         ```
+        JSON方法实现
+        ```
+        	function deepClone(target){
+        		return JSON.parse(JSON.stringify(target)); // JSON.stringify将JSON对象解析为字符串，这时会在内存中开辟一个新的地址用来存储字符串，此时已经切断和原对象的关联，但是不符合JSON数据类型的不会拷贝，undefined和function以及Symbol会忽略
+        	}
+        ```
     6. 声明提升——变量和函数声明会提升到执行环境的顶部，在编译阶段发生，变量只提升声明，赋值操作会留在原地
       ```
         if(false){
