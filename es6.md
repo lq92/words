@@ -947,3 +947,23 @@
     let g = gen();
     let result = g.next();
     result.value.then(val => console.log(val)) // 'success'
+## Module
+    es6的模块是在编译时确定各个模块间的相互依赖关系，使用export和import，效率要高
+    Commonjs和AMD模块是运行时加载，使用require
+    ```
+      // es6模块，只从test模块中加载t1/t2/t3方法，其他不加载
+      import { t1, t2, t3 } form 'test'; 
+      // Commonjs，先加载整个test模块，然后再读取t1/t2/t3方法
+      let { t1, t2, t3 } = require('test');
+    ```
+    严格模式——模块中自动使用严格模式
+    export命令——规定模块的对外接口
+      一个模块就是一个独立的文件，该文件内部的所有变量，外部无法获取，如要获取必须通过export对外暴露该变量
+        ```
+          export var t1 = 'bill';
+          export var t2 = 23;
+          // 等价于
+          var t1 = 'bill';
+          var t2 = 23;
+          export { t1, t2 }
+        ```
