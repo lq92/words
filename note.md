@@ -33,6 +33,35 @@
             }
             let o = Object.assign({}, obj)
         ```
+      模拟underscore中extend(浅拷贝)实现
+        ```
+          function isObject(obj){ // 判断参数是否为对象，保留function，去除null
+            let type = typeof obj;
+            return type === 'function' || type === 'object' && !!obj;
+          }
+          function ownKeys(obj){ // 返回参数的所有键
+            let keys = [];
+            if(!isObject(obj)) return []; // 不是对象的话，返回[]
+            if(Object.keys){
+              return Object.keys(obj);
+            }else{
+              for(let i in obj){
+                if(obj.hasOwnProperty(i)){ // 不获取原型链中的键
+                  keys.push(i);
+                }
+              }
+            }
+            return keys;
+          }
+          function extend(target, ...sources){
+            sources.forEach(source => {
+              ownKeys(source).forEach(key => {
+                target[key] = source[key];
+              })
+            })
+            return target;
+          } 
+        ```
       深拷贝：浅拷贝对于数组和对象只拷贝引用的地址值
         ```
           function deepCopy(source, target = {}){
@@ -441,37 +470,37 @@
         chunk(4)
       ```
   	23. 数组去重
-  		indexOf去重
-  		```
-  			let unique = target => {
-  				let arr = [];
-  				target.forEach(item => {
-  					if(arr.indexOf(item) === -1){
-  						arr.push(item);
-  					}
-  				})
-  				return arr;
-  			}
-  		```
-  		hash去重
-  		```
-  			let unique = target => {
-  				let hash = {};
-  				let arr = [];
-  				target.forEach(item => {
-  					let tem = typeof item + item;
-  					if(!hash[tem]){
-  						arr.push(item);
-  						hash[tem] = true;
-  					}
-  				})
-  				return arr;
-  			}
-  		```
-  		Set去重
-  		```
-  			[...new Set{}]
-  		```
+      indexOf去重
+      ```
+        let unique = target => {
+          let arr = [];
+          target.forEach(item => {
+            if(arr.indexOf(item) === -1){
+              arr.push(item);
+            }
+          })
+          return arr;
+        }
+      ```
+      hash去重
+      ```
+        let unique = target => {
+          let hash = {};
+          let arr = [];
+          target.forEach(item => {
+            let tem = typeof item + item;
+            if(!hash[tem]){
+              arr.push(item);
+              hash[tem] = true;
+            }
+          })
+          return arr;
+        }
+      ```
+      Set去重
+      ```
+        [...new Set{}]
+      ```
     24. 防止对象修改
       * Object.preventExtensions()——对象无法添加新属性
         使用Object.isExtensible()——获取对象是否可扩展
@@ -535,4 +564,40 @@
             }
           }
         }
+      ```
+    28. uber——获取超类
+      ```
+        function create(superClass, stuff){
+          function F(){}
+          F.prototype = superClass;
+          let n = new F();
+          n.uber = superClass;
+          Object.keys(stuff).forEach(key => n[key] = stuff[key]);
+          return n;
+        }
+        let shape = {
+          name: 'shape',
+          toString(){
+            return this.name;
+          }
+        }
+        let twoDShape = create(shape, {
+          name: '2D shape',
+          toString(){
+            return this.uber.toString() + ',' + this.name;
+          }
+        })
+        let triangle = create(twoDShape, {
+          name: 'triangle',
+          side: 0,
+          height: 0,
+          getArea(){
+            return this.side * this.height / 2;
+          }
+        })
+        let m = create(triangle, {
+          side: 4,
+          height: 10
+        })
+        m.toString() // return ?
       ```
