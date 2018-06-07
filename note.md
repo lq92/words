@@ -20,6 +20,11 @@
       * 严格模式下this指向undefined，非严格模式下指向window
       * 严格模式下禁用with语句
       * 严格模式下的eval不再为上层范围引入新变量
+      * eval和arguments不能被重新赋值
+      * 不能使用arguments.caller和arguments.callee
+      * 不能使用0开头表示八进制
+      * 不能删除不可删除的属性
+      * 不能对只读属性赋值
     4. isNaN()和Number.isNaN()区别：isNaN会对非数字参数先转换成数字再判断
     5. 对象的深浅拷贝
       浅拷贝：Object.assign()将所有可枚举属性的值从一个或多个源对象复制到目标对象，返回目标对象
@@ -601,3 +606,104 @@
         })
         m.toString() // return ?
       ```
+    29. Module pattern
+      ```
+        let Person = (function(){
+          let age = 23;
+          function Inner(name){
+            this.name = name;
+          }
+          Inner.prototype.getAge = function(){
+            return age;
+          }
+          Inner.prototype.ageIncrease = function(){
+            age++;
+          }
+          return Inner;
+        })()
+      ```
+      ```
+        function EventTarget(){}
+        EventTarget.prototype = {
+          constructor: EventTarget,
+          addListener(type, listener){
+            if(!this._listener){
+              this._listener = [];
+            }
+            if(typeof type === 'undefined'){
+              throw new Error('Missing type!');
+            }
+            if(!this._listener[type]){
+              this._listener[type] = [];
+            }
+            this._listener[type].push(listener);
+          },
+          fire(ev){
+            if(this._listener && Array.isArray(this._listener[ev.type])){
+              let listeners = this._listener[ev.type];
+              for(let i = 0; i < listeners.length; i++){
+                listeners[i].call(this, ev);
+              }
+            }
+          },
+          removeListener(type, listener){
+            if(this._listener && Array.isArray(this._listener[type])){
+              let listeners = this._listener[type];
+              for(let i = 0; i < listeners.length; i++){
+                if(listeners[i] === listener){
+                  listeners.splice(i, 1);
+                }
+              }
+            }
+          }
+        }
+        let target = new EventTarget();
+        function test1(ev){
+          console.log(ev.msg.toUpperCase());
+        }
+        function test2(ev){
+          console.log(`Hello, ${ev.msg}`);
+        }
+        target.addListener('test', test1);
+        target.addListener('test', test2);
+        target.fire({ type: 'test', msg: 'world!' }) // WORLD!, Hello, world!
+      ```
+    30. mixin实现
+      ```
+        let obj = {
+          name: 'bill',
+          get birth(){
+            return 1992
+          }
+        }
+        function mixin(target, resource){
+          Object.keys(resource).forEach(key => {
+            target[key] = resource[key];
+          })
+        }
+        // 缺点: 对于目标元素中包含的访问器属性只是将返回值复制
+        function mixin(target, resource){
+          Object.keys(resource).forEach(key => {
+            let descriptor = Object.getOwnPropertyDescriptor(resouce, key);
+            Object.defineProperty(target, key, descriptor);
+          })
+          return target;
+        }
+      ```
+    31. 安全构造函数
+      ```
+        function Person(name){
+          if(this instanceof Person){
+            this.name = name;
+          }else{
+            return new Person(name);
+          }
+        }
+      ```
+    32. 模块化开发——一个js文件就是一个模块
+      解决全局变量冲突问题——模块化之前使用命名空间来解决，但是太长的命名空间难以记忆
+      按需引入
+      文件依赖——模块化之前都是手动引入所需文件，现在可以配合自动化构建工具，自动加载
+      组件复用——降低开发成本和维护成本
+      组件单独开发，方便分工合作
+
