@@ -706,4 +706,19 @@
       文件依赖——模块化之前都是手动引入所需文件，现在可以配合自动化构建工具，自动加载
       组件复用——降低开发成本和维护成本
       组件单独开发，方便分工合作
-
+    33. canvas
+      获取绘制上下文——canvas.getContext('2d');
+      填充颜色——ctx.fillStyle = 'rgb()';
+      绘制图形
+        ctx.fillRect(xPos, yPos, width, height);
+        ctx.strokeRect(xPos, yPos, width, height);
+        ctx.clearRect(xPos, yPos, width, height);
+      绘制路径
+        beginPath()——绘制路径起点
+        closePath()——闭合路径
+        stroke()——通过线条绘制图形轮廓
+        fill()——填充路径的内容区域(当调用fill时所有未闭合的形状都会自动闭合，所以不需要closePath，但调用stroke时不会自动闭合)
+        moveTo(xPos, yPos)——将笔触移动到(xPos, yPos)坐标
+        lineTo(xPos, yPos)——绘制一条从当前位置到(xPos, yPos)坐标的直线
+        arc(xPos, yPos, radius, startRadians, endRadians, anticlockwise)——画一个以(xPos, yPos)为圆心，radius为半径的圆弧，从startRadians开始到endRadians结束，按照anticlockwise给定的方向(boolean表示顺时针还是逆时针，默认顺时针)来生成
+          radians = (Math.PI * 180) / degree
