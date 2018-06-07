@@ -722,3 +722,4 @@
         lineTo(xPos, yPos)——绘制一条从当前位置到(xPos, yPos)坐标的直线
         arc(xPos, yPos, radius, startRadians, endRadians, anticlockwise)——画一个以(xPos, yPos)为圆心，radius为半径的圆弧，从startRadians开始到endRadians结束，按照anticlockwise给定的方向(boolean表示顺时针还是逆时针，默认顺时针)来生成
           radians = (Math.PI * 180) / degree
+    34. 获取DOM元素属性——window.getComputedStyle(dom, null).getPropertyValue(property)
