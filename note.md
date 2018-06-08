@@ -723,3 +723,49 @@
         arc(xPos, yPos, radius, startRadians, endRadians, anticlockwise)——画一个以(xPos, yPos)为圆心，radius为半径的圆弧，从startRadians开始到endRadians结束，按照anticlockwise给定的方向(boolean表示顺时针还是逆时针，默认顺时针)来生成
           radians = (Math.PI * 180) / degree
     34. 获取DOM元素属性——window.getComputedStyle(dom, null).getPropertyValue(property)
+    35. BOM
+      * window.location——protocal/host/hostname/port/pathname/search/hash/origin/href/toString()/valueOf()/assign()/reload()/replace()
+      * window.history——back()/forward()/go()
+        pushState(state, title, URL)
+        popstate事件——浏览器单击前进后退按钮会触发此事件
+        replaceState(state, title, URL)——替换当前记录
+    36. DOM
+      文档节点是每个文档的根节点，文档节点只有一个子节点——html元素(文档元素)
+      每个节点都有一个nodeType属性，表示节点的类型
+        Node.ELEMENT_NODE(1)
+        Node.ATTRIBUTE_NODE(2)
+        Node.TEXT_NODE(3)
+      nodeName和nodeValue属性
+        元素节点的nodeName返回元素的标签名(大写),nodeValue返回null
+        文本节点的nodeName返回#text,nodeValue返回文本内容
+      节点有一个childNodes属性，保存一个NodeList对象(类数组对象)，表示该节点的子节点，可以通过[index]或者item(index)访问
+      每个节点都有一个parentNode属性，表示该节点的父节点
+      previousSibling
+      nextSibling
+      firstChild
+      lastChild
+      ownerDocument
+      hasChildNodes()
+      appendChild(node)——用于向childNodes中添加node节点，并返回该节点，如果插入的节点已经是文档的一部分了，则从原来的位置转移到新位置
+      insertBefore(node, referenceNode)——在referenceNode之前插入node节点，如果referenceNode为null，则此方法等于appendChild
+      replaceChild(node, replaceNode)——将replaceNode节点替换为node节点，返回replaceNode节点
+      removeChild(node)——删除node节点，并返回该节点
+      cloneNode(boolean)——克隆节点，boolean表示是否深克隆(如果为true则子节点一起克隆，否则只克隆节点本身，默认false)，复制后的节点副本属于文档所有(不会显示)，除非将其添加到文档
+      Document类型
+        nodeType为9
+        nodeName为'#document'
+        nodeValue为null
+        parentNode为null
+        ownerDocument为null
+        document.documentElement表示html元素
+        document.body表示body元素
+        document.doctype表示文档声明
+        文档信息
+          document.title(可读可写)
+          document.URL(等于location.href)
+          document.domain(表示文档域名,等于location.host)
+          document.referrer(保存链接到当前页面的那个页面的URL，不存在为'')
+        查找元素
+          document.getElementById(id)
+          document.getElementsByTagName(tagname)——返回HTMLCollection,可以使用[index]语法或item(index)方法访问其中的元素，如果元素包含name特性，可以通过namedItem(name)来访问，也支持[name]来访问
+          document.getElementsByName(name)——返回HTMLCollection
