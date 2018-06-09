@@ -769,3 +769,69 @@
           document.getElementById(id)
           document.getElementsByTagName(tagname)——返回HTMLCollection,可以使用[index]语法或item(index)方法访问其中的元素，如果元素包含name特性，可以通过namedItem(name)来访问，也支持[name]来访问
           document.getElementsByName(name)——返回HTMLCollection
+          对于HTMLCollection而言，可以向[]访问法中传入数值或字符串参数，出入数值时在后台调用item()语法，字符串在后台调用namedItem()方法
+        特殊性集合——返回HTMLCollection
+          document.anchors(返回所有带name特性的a元素)
+          document.forms(返回所有的form元素)
+          document.images(返回所有的图片)
+          document.links(返回所有带href特性的a元素)
+        特性检测——document.implementation.hasFeature('HTML', '5.0')，配合特性检测
+      Element类型
+        nodeType为1
+        nodeName(===tagName)为元素的标签名(大写)
+        nodeValue为null
+        HTML元素——是HTMLElement类型，继承Element，添加了额外的属性(可读可写)
+          title
+          id
+          className
+          lang(不常用)
+          dir(不常用)——ltr(left to right)/rtl(right to left)
+        特性操作
+          ele.getAttribute(property)——可以获取自定义特性值，在获取style和事件时跟属性访问有区别
+            访问style——属性访问返回CSSStyleDeclaration对象,getAttribute返回具体的字符串
+            访问事件——属性访问返回整个函数,getAttribute返回事件语句
+          ele.setAttribute(property, value)——设置特性
+          ele.removeAttribute(property)——清除特性
+        attributes属性——包含一个NamedNodeMap是一个动态集合，元素的每一个特性都由一个Attr节点表示，每个节点都保存在NamedNodeMap对象中
+          getNamedItem(name)
+          removeNamedItem(name)
+          setNamedItem(attrNode)
+          item(index/string)/[index/string]
+          ```
+            <p id='p1' class='t1' title='test' data-time='11111'>test</p>
+            let p = document.querySelector('p');
+            p.attributes.length // 4
+            p.attributes.getNamedItem('id') // id='p1',nodeName和nodeValue可以分别获得特性名和特性值
+            p.attributes.removeNamedItem('id')
+            let attr = document.createAttribute('data-test');
+            attr.nodeValue = 'test2'
+            p.attributes.setNamedItem('attr')
+          ```
+        创建元素——document.createElement(tagName)
+      Text类型
+        nodeType为3
+        nodeName为#text
+        nodeValue(data)为文本值
+          appendData(text)
+          insertData(offset, text)
+          deleteData(offset, count)
+          replaceData(offset, count, text)
+          splitText(offset)
+          substringData(offset, count)
+        createTextNode()——创建文本节点
+        ele.normalize()——规范文本节点
+          ```
+            let p = document.createElement('p'),
+                t1 = document.createTextNode('t1'),
+                t2 = document.createTextNode('t2');
+            p.appendChild(t1);
+            p.appendChild(t2);
+            p.childNodes // 2
+            p.normalize()
+            p.childNodes // 1
+          ```
+      DocumentFragment类型——文档片段
+        nodeType为11
+        nodeName为#document-fragment
+        nodeValue为null
+        创建文档片段——document.createDocumentFragment()
