@@ -769,7 +769,7 @@
           document.getElementById(id)
           document.getElementsByTagName(tagname)——返回HTMLCollection,可以使用[index]语法或item(index)方法访问其中的元素，如果元素包含name特性，可以通过namedItem(name)来访问，也支持[name]来访问
           document.getElementsByName(name)——返回HTMLCollection
-          对于HTMLCollection而言，可以向[]访问法中传入数值或字符串参数，出入数值时在后台调用item()语法，字符串在后台调用namedItem()方法
+          对于HTMLCollection而言，可以向[]访问法中传入数值或字符串参数，输入数值时在后台调用item()语法，字符串在后台调用namedItem()方法
         特殊性集合——返回HTMLCollection
           document.anchors(返回所有带name特性的a元素)
           document.forms(返回所有的form元素)
@@ -835,3 +835,107 @@
         nodeName为#document-fragment
         nodeValue为null
         创建文档片段——document.createDocumentFragment()
+      Attr类型——不常用
+        name(nodeName)
+        value(nodeValue)
+        specified(boolean)
+        createAttribute()
+        ele.setAttributeNode(attr)
+        ``` 
+          let ele = document.querySelector('ele');
+          let attr1 = document.createAttribute('data-attr1');
+          attr1.value = 'data-attr1';
+          ele.setAttributeNode(attr1);
+          ------------------------------------------------
+          let attr2 = document.createAttribute('data-attr2');
+          attr2.nodeValue = 'data-attr2';
+          ele.attributes.setNamedItem(attr2);
+          ------------------------------------------------
+          ele.setAttribute('data-attr3', 'data-attr3')
+        ```
+      Table中的DOM
+        table
+          tHead
+          tBodies返回HTMLCollection
+          tFoot
+          rows返回HTMLCollection
+          caption
+          createTHead()
+          createTFoot()
+          createCaption()
+          deleteTHead()
+          deleteTFoot()
+          deleteCaption()
+          deleteRow(index)
+          insertRow(index)
+        tBody
+          rows
+          insertRow(index)
+          deleteRow(index)
+        tr
+          cells
+          insertCell(index)
+          deleteCell(index)
+    37. DOM扩展
+      元素选择
+        querySelector(/* css selector */)
+        querySelectorAll(/* css selector */)
+      元素遍历
+        childElementCount——返回子元素的个数
+        firstElementChild
+        lastElementChild
+        previousElementSibling
+        nextElementSibling
+      HTML5
+        元素选择
+          getElementsByClassName()
+        classList属性
+          add(value)
+          remove(value)
+          toggle(value)
+          contains(value)
+        焦点管理
+          document.activeElement——返回获得焦点的元素
+          document.hasFocus()——判断文档是否获得了焦点
+        HTMLDocument变化
+          readyState属性: loading/complete
+          兼容模式: document.compatMode(CSS1Compat标准模式/BackCompat混杂模式)
+          head属性: document.head返回head元素的引用
+        自定义属性——要加上'data-'前缀来表明是自定义属性，后续可以通过dataset来访问
+          ```
+            let ele = document.querySelector('ele'),
+                attr = document.createAttribute('data-test');
+            attr.nodeValue('data-test');
+            ele.attributes.setNamedItem(attr);
+            ele.dataset // 返回NamedNodeMap{ test: 'data-test' }
+            ele.dataset.test // 'data-test'
+          ```  
+        插入标记
+          innerHTML/innerText/textContent
+          outerHTML/outerText
+          insertAdjacentHTML()方法，两个参数：插入的位置和HTML文本，第一个参数必须是以下之一：
+            'beforebegin'——同辈元素
+            'afterbegin'——子元素
+            'beforeend'——子元素
+            'afterend'——同辈元素
+            ```
+              ele.insertAdjacentHTML('before', '<p>xxxx</p>')
+            ```
+        ele.scrollIntoView(): 当传入true或者不传时调用元素会尽可能的与视口顶部齐平，如果传入false，调用元素会尽可能的全部出现在视口中
+        children属性：返回元素的子元素节点
+        parent.contains(child)——判断child是否是parent后代
+      样式
+        可以通过ele.style.property访问style定义的行内样式，float要使用cssFloat，ie是styleFloat
+        cssText
+        getPropertyValue(property)
+        setProperty(property, value, priority)
+        removeProperty(property)
+        window.getComputedStyle(ele, null)[property]/ie的是ele.currentStyle[property]
+      元素的大小
+        偏移量——包含元素的宽高和padding和border以及水平滚动条
+          offsetWidth/offsetHeight/offsetLeft/offsetTop/offsetParent
+        客户区的大小——不包括滚动条的大小，只包括元素的宽高和内边距
+          clientWidth/clientHeight
+          ```
+            document.documentElement.clientWidth/document.body.clientWidth
+          ```
