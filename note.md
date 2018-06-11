@@ -939,3 +939,87 @@
           ```
             document.documentElement.clientWidth/document.body.clientWidth
           ```
+        滚动大小
+          scrollWidth——不包含滚动条，元素的总宽度
+          scrollHeight——不包含滚动条，元素的总高度
+          scrollLeft——可读可写，被遮盖的左侧宽度
+          scrollTop——可读可写，被遮盖的上侧高度
+        ele.getBoundingClientRect()返回的width和offsetWidth相等
+      遍历DOM——NodeIterator和TreeWalker,对给与的起点进行深度优先遍历，可从前向后亦可从后向前
+        NodeIterator
+          document.createNodeIterator()创建实例，接收四个参数
+            root——作为搜索的起点
+            whatToShow——表示要访问哪些节点的数字代码
+              NodeFilter.SHOW_ALL显示所有节点
+              NodeFilter.SHOW_ELEMENT显示元素节点
+              NodeFilter.SHOW_ATTRIBUTE显示特性节点
+              NodeFilter.SHOW_TEXT显示文本节点
+              可以组合使用
+                `whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT`
+            filter——一个NodeFilter对象，或者表示接收还是拒绝某种特定节点的函数
+              NodeFilter对象只有一个方法，acceptNode，如果应该访问给定节点，该方法返回NodeFilter.FILTER_ACCEPT，否则返回NodeFilter.FILTER_SKIP
+            boolean——html中为false
+          NodeIterator类型有两个方法: nextNode()和previousNode()
+          ```
+            let ele = document.querySelector(ele),
+                filter = node => node.tagName.toLowerCase() === 'li' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
+                iterator = document.createNodeIterator(ele, NodeFilter.SHOW_ELEMENT, filter, false)
+                node = iterator.nextNode();
+            while(node !== null){
+              console.log(node.tagName);
+              node = iterator.nextNode();
+            }
+          ```
+        TreeWalker
+          document.createTreeWalker()创建实例，参数和NodeIterator相同
+          除了nextNode()和previousNode()还可以在别的方向上遍历
+            firstChild()
+            lastChild()
+            previousSibling()
+            nextSibling()
+            parentNode()
+            currentNode——表示方法在上一次遍历中返回的节点
+          当指定filter时，此时还可以传入NodeFilter.FILTER_REJECT，此时表示跳过响应节点及此节点的所有子树
+          ```
+            let ele = document.querySelector(ele),
+                filter = node => node.tagName.toLowerCase() === 'li' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
+                walker = document.createTreeWalker(ele, NodeFilter.SHOW_ELEMENT, filter, false);
+            walker.firstChild()
+            let node = walker.nextSibling();
+            while(node !== null){
+              console.log(node.tagName);
+              node = walker.nextNode();
+            }
+          ```
+    38. 事件
+      事件流——描述了页面中接收事件的顺序(ie事件冒泡/事件捕获)，包含三个阶段：捕获阶段/处于目标阶段/冒泡阶段
+      事件冒泡流——事件先由页面中最具体的元素接收，然后逐层冒泡到文档元素
+      事件捕获流——事件先由不具体的元素接收，而具体的元素最后接收
+      DOM0级事件——将事件处理函数直接赋值给对象,缺点不能同时制定两个事件处理函数
+      DOM2级事件
+        ele.addEventListener(eventName, handler, boolean)boolean表示事件是否捕获
+        ele.removeEventListener(eventName, handler, boolean)
+        IE——IE8及之前只支持事件冒泡，this指向window，多次指定按相反顺序执行
+          ele.attachEvent('on' + eventName, handler)
+          ele.detachEvent('on' + eventName, handler)
+        ```
+          // 跨浏览器事件处理程序
+          let eventHandler = {
+            addEventListener(ele, eventName, handler){
+              if(ele.addEventListener){
+                return ele.addEventListener(eventName, handler, false);
+              }else if(ele.attachEvent){
+                return ele.attachEvent(`on${eventName}`, handler);
+              }
+              return ele[`on${eventName}`] = handler;
+            },
+            removeEventListener(ele, eventName, handler){
+              if(ele.removeEventListener){
+                return ele.removeEventListener(eventName, handler, false);
+              }else if(ele.detachEvent){
+                return ele.detachEvent(`on${eventName}`, handler);
+              }
+              return ele[`on${eventName}`] = null;
+            }
+          }
+        ```
