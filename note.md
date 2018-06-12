@@ -1005,6 +1005,15 @@
         ```
           // 跨浏览器事件处理程序
           let eventHandler = {
+            getTarget(ev){
+              return ev.target || ev.srcElement;
+            },
+            stopPropagation(ev){
+              return ev.stopPropagation() || ev.cancelBubble = true; 
+            },
+            preventDefault(ev){
+              return ev.preventDefault() || ev.returnValue = false;
+            },
             addEventListener(ele, eventName, handler){
               if(ele.addEventListener){
                 return ele.addEventListener(eventName, handler, false);
@@ -1023,3 +1032,65 @@
             }
           }
         ```
+      事件对象——event作为参数传入到事件处理程序
+        eventPhase/调用事件处理程序的阶段：1、捕获；2、处于目标；3、冒泡，当eventPhase等于2时，this、target、currentTarget相等
+        preventDefault()/取消事件默认行为
+        stopPropagation()/取消事件的进一步捕获或冒泡
+        target/事件处理程序实际作用的对象
+        currentTarget/调用事件处理程序的元素，始终等于this
+        type/事件类型
+        IE中的事件对象
+          IE8及以下当使用DOM0级事件时，event是作为window对象的属性，IE9及以上event作为参数传递给事件处理程序；使用DOM2级事件是作为参数传递
+          cancelBubble：默认为false，设为true则取消事件冒泡，等同于stopPropagation()
+          returnValue：默认为true，设为false则取消默认行为，等同于preventDefault()
+          type
+          srcElement：等同于target
+      UI事件
+        load事件——可以在window/body/img上触发
+        unload事件
+        resize事件——在window上触发，不要加入大量的计算
+        scroll事件——在window或者有滚动条的元素上触发
+      焦点事件——在页面获得或失去焦点时触发，可以和document.activeElement和document.hasFocus()配合使用，来跟踪页面的行踪                              
+        blur——元素失去焦点时触发，不冒泡
+        focus——元素获得焦点时触发，不冒泡
+        focusin——等价于focus，冒泡
+        focusout——等价于blur，冒泡
+      鼠标事件
+        click
+        dblclick
+        mouseenter——不冒泡，移到子元素上不触发
+        mouseleave——不冒泡，移到子元素上不触发
+        mousemove
+        mouseover
+        mouseout
+        mousedown
+        mouseup
+        鼠标坐标
+          event.clientX/event.clientY
+          event.pageX/event.pageY
+          event.screenX/event.screenY
+        修改键
+          event.shiftKey/event.ctrlKey/event.metaKey/event.altKey当键盘上对应的键按下时，此时返回true
+        相关元素——relatedTarget只有mouseover和mouseout事件会有，其他为null
+          event.relatedTarget: 对于mouseover获得光标的是主目标，失去光标的是相关目标，对于mouseout失去光标的是主目标，获得光标的是相关目标
+        鼠标按钮——event.button
+          0表示左键，1表示滚轮，2表示右键
+          ```
+            let ele = document.querySelector(ele);
+            ele.addEventListener('mousedown', e => {
+              console.log(e.button) // 0/1/2
+            })
+          ```
+        鼠标滚轮事件——mouseWheel/FireFox中是DOMMouseScroll事件
+          mouseWheel中event.mouseDelta中保存着滚动的距离，向上是120，向下是-120
+          DOMMouseScroll中event.detail中保存着滚动的距离，向上是-3，向下是3
+          ```
+            EventHandler = {
+              getMouseScrollDistance(ev){
+                if(ev.detail){
+                  return ev.detail * -40
+                }
+                return ev.mouseDelta;
+              }
+            }
+          ```
