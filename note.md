@@ -1081,8 +1081,8 @@
               console.log(e.button) // 0/1/2
             })
           ```
-        鼠标滚轮事件——mouseWheel/FireFox中是DOMMouseScroll事件
-          mouseWheel中event.mouseDelta中保存着滚动的距离，向上是120，向下是-120
+        鼠标滚轮事件——mousewheel/FireFox中是DOMMouseScroll事件
+          mouseWheel中event.wheelDelta中保存着滚动的距离，向上是120，向下是-120
           DOMMouseScroll中event.detail中保存着滚动的距离，向上是-3，向下是3
           ```
             EventHandler = {
@@ -1090,7 +1090,22 @@
                 if(ev.detail){
                   return ev.detail * -40
                 }
-                return ev.mouseDelta;
+                return ev.wheelDelta;
+              },
+              mouseWheel(ele, handler){
+                if(EventHandler.addEventListener(ele, 'mousewheel', handler)){
+                  return EventHandler.addEventListener(ele, 'mousewheel', handler);
+                }
+                return EventHandler.addEventListener(ele, 'DOMMouseScroll', handler);
               }
             }
           ```
+        键盘事件
+          keydown——任意键按下，一直按下会一直触发
+          keyup——任意键抬起
+          keypress——字符键按下，一直按下会一直触发
+          键码——当发生keydown或keyup事件时，event对象有一个keyCode属性，返回一个数字
+          字符码——只有发生keypress事件时，event对象有charCode属性，返回对应的ASCII编码
+          DOM3级的变化
+            event.key——返回按下的字符
+            textInput事件——文本框支持的事件，此时event.data保存输入的字符
