@@ -1109,3 +1109,9 @@
           DOM3级的变化
             event.key——返回按下的字符
             textInput事件——文本框支持的事件，此时event.data保存输入的字符
+        contextmenu事件——冒泡
+          可以使用event.preventValue()取消默认菜单
+        beforeunload事件——页面卸载
+        DOMContentLoaded事件——DOM元素加载完毕后出发，而load要等资源下载完毕
+        hashchange——浏览器hash改变时在window上触发
+      事件委托——利用事件冒泡只添加一个事件处理程序
