@@ -1115,3 +1115,66 @@
         DOMContentLoaded事件——DOM元素加载完毕后出发，而load要等资源下载完毕
         hashchange——浏览器hash改变时在window上触发
       事件委托——利用事件冒泡只添加一个事件处理程序
+    39. 高级技巧
+      作用域安全的构造函数
+        ```
+          function Person(name, age, job){
+            if(!(this instanceof Person)){
+              return new Person(name, age, job)
+            }
+            this.name = name;
+            this.age = age;
+            this.job = job
+          }
+        ```
+      惰性载入——表示函数执行的分支仅会发生一次
+        ```
+          let EventHandler = {
+            addEventListener: function(ele, eventName, handler){
+              if(ele.addEventListener){
+                EventHandler.addEventListener = function(ele, eventName, handler){
+                  ele.addEventListener(eventName, handler, false);
+                }
+              }else if(ele.attachEvent){
+                EventHandler.addEventListener = function(ele, eventName, handler){
+                  ele.attachEvent('on' + eventName, handler);
+                }
+              }else{
+                EventHandler.addEventListener = function(ele, eventName, handler){
+                  ele['on' + eventName] = handler;
+                }
+              }
+              return EventHandler.addEventListener(ele, eventName, handler)
+            }
+          }
+        ```
+      函数柯里化
+        ```
+          let curry = (...outer) => {
+            let fn = outer.shift();
+            return (...inner) => {
+              return fn.apply(null, [...outer, ...inner])
+            }
+          }
+        ```
+      分块技术
+        ```
+          function chunk(arr, handler, context){
+            setTimeout(function(){
+              let item = arr.shift();
+              handler.call(context, item);
+              if(arr.length > 0){
+                chunk(arr, handler, context)
+              }
+            }, 0)
+          }
+        ```
+      函数节流
+        ```
+          function throttle(method, context){
+            clearTimeout(method.tId);
+            method.tId = setTimeout(function(){
+              method.call(context);
+            }, 100)
+          }
+        ```
