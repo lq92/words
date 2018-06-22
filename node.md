@@ -51,4 +51,63 @@
     ### process.cwd()——返回当前工作目录的字符串
     ### process.nextTick(callback, [args])——接收一个回调函数和可选的参数，当回调函数执行时，传入的参数作为回调函数的参数
         nextTick中回调函数执行的时机是下一个事件队列开始之前
+## util模块
+    ### util.inherits(SubConstructor, SuperConstructor)，子类的原型继承父类的原型，现在不建议使用，用es6的extends继承语法，可以通过SubConstructor.super_方法获取SuperConstructor
+        ```
+            // Sub的实例只继承Super.prototype中的属性/方法
+            let util = require('util');
+            function Super(name, age){
+                this.name = name;
+                this.age = age;
+                this.sayName = function(){
+                    return this.name;
+                }
+            }
+            function Sub(name){
+                this.name = name;
+            }
+            util.inherits(Sub, Super)
+            let s = new Sub('Bill') 
+        ```
+    ### util.inspect(Object, (options))——将对象转换为字符串形式
+        options参数
+            showHidden: 默认为false，如果为true，则包括不可枚举属性
+            depth: 默认为2，表示迭代深度，若为null则表示无限迭代
+            colors: 默认为false，若为true，则输出不同类型的数据用颜色标识，自定义颜色：util.inspect.styles(一个对象)
+                ```
+                    /** util.inspect.styles
+                      * 定义的颜色，可以通过util.inspect.colors获取
+                    */ 
+                    util.inspect.styles = {
+                        number: 'blue',
+                        string: 'red'
+                    }
+                ```
+## events模块
+    events模块只提供了一个对象——EventEmitter
+    EventEmitter.on(event, listener)——注册事件
+    EventEmitter.emit(event, (args))——触发事件
+        ```
+            let EventEmitter = require('events').EventEmitter;
+            let event = new EventEmitter();
+            event.on('test', (arg1, arg2) => console.log(arg1, arg2));
+            event.emit('test', 'Bill', 23)
+        ```
+    EventEmitter.once(event, listener)——注册事件，只调用一次
+    EventEmitter.removeListener(event, listener)——移除指定事件的某个监听器，在事件触发后，最后一个监听器完成执行前，任何removeListener()或removeAllListeners()调用都不会从emit()中移除
+        ```
+            let EventEmitter = require('events').EventEmitter;
+            let event = new EventEmitter();
+            let callback1 = () => {
+                console.log('A');
+                event.removeListener('test', callback2);
+            };
+            let callback2 = () => console.lob('B');
+            event.on('test', callback1);
+            event.on('test', callback2);
+            event.emit('test'); // A B
+            event.emit('test'); // A
+        ```
+    EventEmitter.removeAllListeners((event))——移除所有事件/event事件的所有监听器
+
 
