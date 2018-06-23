@@ -109,5 +109,63 @@
             event.emit('test'); // A
         ```
     EventEmitter.removeAllListeners((event))——移除所有事件/event事件的所有监听器
-
+## fs模块
+    ### 读取文件
+        异步: readFile(path, (ecoding), callback)如果不传入ecoding则返回Buffer表示的二进制数据，callback回调函数的参数是(err, data)
+        同步: readFileSync(path, (ecoding))
+## url模块
+    |                                        href                                        |
+    --------------------------------------------------------------------------------------
+    | protocol |    |     auth     |        host         |          path         | hash  |
+    |          |    |              |   hostname   | port | pathname |   search   | 
+    '  https:    //   user : pass  @ sub.host.com : 8080   /p/a/t/h ? query=string #hash '
+    ### url.parse(urlString, (parseQueryString, slashesDenoteHost))——解析url，返回解析后的对象，parseQueryString默认为false，若为true则query属性按照querystring模块的parse方法解析为一个对象，slashesDenoteHost默认为false，若为true则//之后至下一个/之前的字符串会被解析为host，例如: //foo/bar会被解析为{host: 'foo', pathname: '/bar'}
+        ```
+            let url = require('url');
+            let str = 'https://baike.baidu.com/item/CGI/607810?fr=aladdin&fromid=6717913&fromtitle=%EF%BC%A3%EF%BC%A7%EF%BC%A9';
+            url.parse(str, true)
+            /*{
+                protocal: 'https',
+                slashes: true,
+                auth: null,
+                host: 'baike.baidu.com',
+                port: null,
+                hostname: 'baike.baidu.com',
+                hash: null,
+                search: '?fr=aladdin&fromid=6717913&fromtitle=%EF%BC%A3%EF%BC%A7%EF%BC%A9',
+                query: {fr: 'aladdin', fromid: '6717913', fromtitle: 'ＣＧＩ'},
+                pathname: 'item/CGI/607810',
+                path: 'item/CGI/607810?fr=aladdin&fromid=6717913&fromtitle=%EF%BC%A3%EF%BC%A7%EF%BC%A9',
+                href: 'https://baike.baidu.com/item/CGI/607810?fr=aladdin&fromid=6717913&fromtitle=%EF%BC%A3%EF%BC%A7%EF%BC%A9'
+                }*/
+        ```
+## querystring模块
+    ### querystring.parse(str, (sep), (eq), (options))——返回一个对象，用于解析查询字符串
+        sep: <string>用于界定查询字符串中的键值对的子字符串，默认为'&'
+        eq: <string>用于界定查询字符串中的键与值的子字符串，默认为'='
+        options: <object>
+            decodeURIComponent: <function>解码查询字符串中的字符时使用的函数，默认为querystring.unescape()
+            maxKeys: <number>指定要解析的键的最大数量，指定为0则不限制，默认为1000
+        ```
+            let querystring = require('querystring');
+            let str = 'fr=aladdin&fromid=6717913&fromtitle=ＣＧＩ';
+            querystring.parse(str, null, null, { maxKeys: 2 })
+            /*
+                { 
+                    fr: 'aladdin',
+                    fromid: '6717913'
+                }
+             */
+        ```
+    ### querystring.unescape(str)——对给定的str进行解码，默认使用js内置的decodeURIComponent()进行解码
+    ### querystring.stringify(obj, (sep), (eq), (options))——将对象解析成URL查询字符串，如果对象中的属性类型是非Number/String/Boolean/Array类型，则会被强制转换为空字符串
+        sep和eq参数与querystring.parse参数一致
+        options: <object>
+            ecodeURIComponent: <function>把对象中的字符串转换成查询字符串时使用的函数，默认为querystring.escape()
+        ```
+            let querystring = require('querystring');
+            let o = { a: 'a', b: new Date(), c: function(){} };
+            querystring.stringify(o, ';', ':'); // 'a:a'
+        ```
+    ### querystring.escape(str)——将给定的str进行URL编码
 
