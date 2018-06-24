@@ -9,8 +9,8 @@
 ## npm install -g无权限问题——提示：npm  wran checkPermission
     删除C:/user/Administrator/AppData/Roaming/npm和npm-cache后重装node
 ## [supervisor](https://github.com/petruisfan/node-supervisor)自动监控文件修改后自启动服务器
-    安装——npm install supervisor -g
-    supervisor xxx.js
+    安装——`npm install supervisor -g`
+    `supervisor xxx.js`
 ## 模块系统
     node通过module.exports/exports暴露模块，通过require加载模块
     require不会重复加载模块，无论调用多少次require获得的模块都是同一个
@@ -22,7 +22,7 @@
         文档位于doc目录下
         单元测试位于test目录下
     Node在调用一个包时会先检测package.json中的main字段，如果指定该字段会调用这个字段下的文件，如果未指定则调用包下的index.js文件，如果找不到则报错
-        name: 包的名称，必须唯一，由小写英文、数组、下划线组成，不能包含空格
+        name: 包的名称，必须唯一，由小写英文、数字、下划线组成，不能包含空格
         version: 版本字符串
         description: 包的简要说明
         keywords: 包的关键字数组，用于搜索
@@ -114,11 +114,11 @@
         异步: readFile(path, (ecoding), callback)如果不传入ecoding则返回Buffer表示的二进制数据，callback回调函数的参数是(err, data)
         同步: readFileSync(path, (ecoding))
 ## url模块
-    |                                        href                                        |
-    --------------------------------------------------------------------------------------
-    | protocol |    |     auth     |        host         |          path         | hash  |
-    |          |    |              |   hostname   | port | pathname |   search   | 
-    '  https:    //   user : pass  @ sub.host.com : 8080   /p/a/t/h ? query=string #hash '
+    |                                         href                                         |
+    ----------------------------------------------------------------------------------------
+    | protocol |    |     auth     |        host         |          path          |  hash  |
+    |          |    |              |   hostname   | port | pathname |   search    |        | 
+    '  https:    //   user : pass  @ sub.host.com : 8080   /p/a/t/h ? query=string   #hash '
     ### url.parse(urlString, (parseQueryString, slashesDenoteHost))——解析url，返回解析后的对象，parseQueryString默认为false，若为true则query属性按照querystring模块的parse方法解析为一个对象，slashesDenoteHost默认为false，若为true则//之后至下一个/之前的字符串会被解析为host，例如: //foo/bar会被解析为{host: 'foo', pathname: '/bar'}
         ```
             let url = require('url');
@@ -168,4 +168,9 @@
             querystring.stringify(o, ';', ':'); // 'a:a'
         ```
     ### querystring.escape(str)——将给定的str进行URL编码
-
+## http模块
+    http.ServerResponse——是返回给客户端的信息
+        ### response.writeHead(statusCode, [headers]): 向请求的客户端发送响应头，statusCode是HTTP状态码，200(成功)、404(未找到)等，headers是一个对象，表示响应头，该函数在一个请求内最多只能调用一次，如果不调用，则自动生成一个响应头
+        ### response.write(data, (encoding)): 向请求的客户端发送响应内容，data是一个Buffer或字符串，如果是字符串，则需指定encoding编码方式，默认utf-8，在response.end调用之前可多次调用
+        ### response.end((data), (encoding)): 结束响应，该函数必须调用一次，否则客户端将永远处于等待状态
+        
