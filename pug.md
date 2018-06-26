@@ -66,3 +66,78 @@
             default
                 p You have #{friends} friends
     ```
+    ```
+        // 块级表达式
+        // let friends = 10;
+        case friends
+            when 0: p You have no friends
+            when 1: p You have one friend
+            default: p You have #{friends} friend
+    ```
+## Code语法
+    ### Unbuffered Code——以-开头
+        ```
+            ul
+                - for(let i = 0; i < 3; i++)
+                    li item
+        ```
+        ```
+            // let items = ['Bill', 'Gate', 'Jack', 'Smith'];
+            ul
+                each item in items
+                    li= item
+        ```
+    ### Buffered Code——以=开头，接受js表达式
+        ```
+            p= 'This is paragraph ' + '<strong>strong</strong>'  => <p>This is paragraph <strong>strong</strong></p>
+        ```
+    ### Unescaped Code——以!=开头，和Buffered Code区别是!=解析字符串中的html元素
+        ```
+            p!= 'This is paragraph ' + '<strong>strong</strong>'  => <p>This is paragraph strong</p>
+        ```
+## Comments
+    ### 单行注释
+        ```
+            // line comment  => 会在html中渲染
+            //- line comment  => 不会在html中渲染
+        ```
+    ### 多行注释
+        ```
+            //
+                multiple
+                comment
+            //- 
+                multiple
+                comment
+        ```
+## Conditional
+    ### if语句
+        ```
+            if condition1
+                statemeng1
+            else if condition2
+                statement2
+            else
+                statement3
+        ```
+    ### unless语句——相当于if !condition
+        ```
+            unless condition
+                statement
+        ```
+## 文档声明——doctype html
+## 导入文档
+    include filename，导入的文件可以是pug文件，也可以是其他类型文件
+## 模板继承
+    block定义一个块，可以在子模板中复写，子模板可以通过extends继承父模板
+    ```
+        // 父
+        block contents
+            p This is comment paragraph.  // 如果子模板中没有复写，则默认显示此行，如果复写则覆盖此行
+    ```
+    ```
+        // 子
+        extends parent
+        block append/prepend contents  // 可以通过append(追加)、prepend(前加)来不覆盖父模板中定义的内容，此时block关键字可选
+            p This is child template
+    ```
