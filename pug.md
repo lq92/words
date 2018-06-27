@@ -141,3 +141,69 @@
         block append/prepend contents  // 可以通过append(追加)、prepend(前加)来不覆盖父模板中定义的内容，此时block关键字可选
             p This is child template
     ```
+## 嵌入
+    #{可以接受JS表达式/变量}——不解析html标签
+    !{可以接受JS表达式/变量}——解析html标签
+    ```
+        - let name = '<strong>pug</strong>'
+        h1 The name is #{name}  => <h1>The name is <strong>pug</strong></h1>
+        h1 The name is !{name}  => <h1>The name is pug</h1>
+    ```
+    #[可以接受元素标签]
+    ```
+        - let name = 'JS'
+        h1 The name is #[strong name]  => <h1>The name is JS</h1>
+    ```
+## 迭代
+    ### each/each...else
+        ```
+            - let values = ['bill', 'jack', 'smith']
+            each val, index in values
+                li= index + ':' + val
+        ```
+    ### while
+        ```
+            - let n = 0
+            while n < 4
+                p= n++
+        ```
+## mixin
+    ```
+        // 定义，可以传入参数或不传
+        mixin test(values)
+            ul.test
+                each val in values
+                    li= val
+        // 使用
+        - let values = ['Bill', 'Gate', 'Jack']
+        +test(values)
+    ```
+    ```
+        // 插入块级内容
+        mixin test(title)
+            .outer
+                h2= title
+                if block
+                    block
+                else
+                    p No block
+        - let title = 'This is title'
+        +test(title)  // 此时渲染<p>No block</p>
+        +test(title)
+            h3 Has Block  // 此时渲染<h3>Has block</h3>
+    ```
+    ```
+        // 混入属性
+        mixin test(name)
+            a.test(href!=attributes.href)= name
+        +test('taobao')(href='http://www.taobao.com')  => <a href='http:www.taobao.com' class='test'>taobao</a>
+        // 或者这样使用
+        +test('taobao')&attributes(attributes)= name
+    ```
+    ```
+        // 剩余参数
+        mixin test(href, ...values)
+            each val in values
+                a.test(href=href)= val
+        +test('http://www.baidu.com', 'Bill', 'Gate')
+    ```
